@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Diagnosis Guessing Game</title>
+  <title>Guess the Diagnosis...🤔</title>
   <style>
     :root{
       /* Light theme */
@@ -18,7 +18,7 @@
     .row{display:flex; gap:12px; flex-wrap:wrap}
     .row > *{flex:1}
     label{font-size:12px; color:var(--muted); display:block; margin-bottom:6px}
-    input[type="text"], textarea, select{width:100%; background:#ffffff; color:var(--ink); border:1px solid #dce1eb; border-radius:10px; padding:10px 12px}
+    input[type="text"]{width:100%; background:#ffffff; color:var(--ink); border:1px solid #dce1eb; border-radius:10px; padding:10px 12px}
     button{background:var(--accent); color:#ffffff; border:0; border-radius:12px; padding:10px 14px; font-weight:600; cursor:pointer}
     button.ghost{background:transparent; color:var(--ink); border:1px solid var(--border)}
     button:disabled{opacity:.5; cursor:not-allowed}
@@ -42,20 +42,27 @@
     .muted{color:var(--muted)}
     .small{font-size:12px}
     .colwrap{overflow:auto}
+    /* Shift the Add Guess button slightly right */
+    .rightShift{ margin-left: 8px }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <h1>Diagnosis Guessing Game</h1>
+    <h1>Guess the Diagnosis...🤔</h1>
 
+    <!-- Top control card: description + randomizer -->
     <div class="card" style="margin-top:12px">
-      <div class="row" style="align-items:end">
+      <div class="row" style="align-items:end; justify-content:space-between">
+        <div style="flex:1 1 auto">
+          <p class="small muted" style="margin:0">Type a diagnosis and press <strong>Add Guess</strong>. Each column shows closeness: <strong>green</strong>=match, <strong>orange</strong>=close, <strong>red</strong>=different.</p>
+        </div>
         <div style="flex:0 0 auto">
-          <button id="newRoundBtn">🎲 New Round</button>
+          <button id="newRoundBtn">Guess Again</button>
         </div>
       </div>
     </div>
 
+    <!-- Guessing card -->
     <div class="card" style="margin-top:16px">
       <div class="row">
         <div>
@@ -64,7 +71,7 @@
           <datalist id="diagnosisList"></datalist>
         </div>
         <div style="align-self:end">
-          <button id="guessBtn">Add Guess</button>
+          <button id="guessBtn" class="rightShift">Add Guess</button>
         </div>
       </div>
       <div class="legend" style="margin-top:10px">
@@ -246,7 +253,7 @@ function resetGame(){
 function pickRandom(){ if(DATA.length===0) return; TARGET = DATA[Math.floor(Math.random()*DATA.length)]; }
 
 function addGuess(input){
-  if(!TARGET){ alert('Click New Round to start.'); return; }
+  if(!TARGET){ alert('Click Guess Again to start.'); return; }
   let key=normalizeToken(input); if(!key) return;
   if(BY_NAME.has(key)) key=BY_NAME.get(key);
   const row=DATA.find(r=>r.diagnosis===key);
@@ -277,8 +284,7 @@ function renderRow(guess){
     ${colorCell(scoreFind, disp(guess.findings))}
     ${colorCell(scoreMgmt, disp(guess.management))}
     ${colorCell(scoreCourse, disp([guess.course]))}
-    <td class="score">${(mean*100).toFixed(0)}%</td>
-  `;
+    <td class="score">${(mean*100).toFixed(0)}%</td>`;
   document.querySelector('#table tbody').appendChild(tr);
 
   if([scoreSystem,scoreAge,scoreEpi,scoreEti,scoreFind,scoreMgmt,scoreCourse].every(s=>s>=0.8)){
