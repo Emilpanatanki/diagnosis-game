@@ -1,0 +1,331 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Content-Style-Type" content="text/css">
+  <title></title>
+  <meta name="Generator" content="Cocoa HTML Writer">
+  <meta name="CocoaVersion" content="2575.6">
+  <style type="text/css">
+    p.p1 {margin: 0.0px 0.0px 12.0px 0.0px; font: 12.0px Times; color: #ffffff; -webkit-text-stroke: #fb0007}
+    p.p2 {margin: 0.0px 0.0px 12.0px 0.0px; font: 12.0px Times; color: #ffffff; -webkit-text-stroke: #fb0007; min-height: 14.0px}
+    span.s1 {font-kerning: none}
+  </style>
+</head>
+<body>
+<p class="p1"><span class="s1">&lt;!DOCTYPE html&gt;</span></p>
+<p class="p1"><span class="s1">&lt;html lang="en"&gt;</span></p>
+<p class="p1"><span class="s1">&lt;head&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;meta charset="utf-8" /&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;meta name="viewport" content="width=device-width, initial-scale=1" /&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;title&gt;Diagnosis Guessing Game&lt;/title&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;style&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>:root{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>/* Light theme */</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>--bg:#f7faff; --panel:#ffffff; --ink:#0b1220; --muted:#4b5565;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>--green:#15a377; --orange:#b7791f; --red:#d64545; --accent:#2563eb;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>--chip:#f3f6fb; --chip-b:#e5eaf3; --border:#e6e9f2;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>html,body{background:var(--bg); color:var(--ink); font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif; margin:0}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.wrap{max-width:1100px; margin:24px auto; padding:0 16px}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>h1{font-size:24px; margin:0 0 12px}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.card{background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:16px; box-shadow:0 6px 18px rgba(10,20,60,.05)}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.row{display:flex; gap:12px; flex-wrap:wrap}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.row &gt; *{flex:1}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>label{font-size:12px; color:var(--muted); display:block; margin-bottom:6px}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>input[type="text"], textarea, select{width:100%; background:#ffffff; color:var(--ink); border:1px solid #dce1eb; border-radius:10px; padding:10px 12px}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>button{background:var(--accent); color:#ffffff; border:0; border-radius:12px; padding:10px 14px; font-weight:600; cursor:pointer}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>button.ghost{background:transparent; color:var(--ink); border:1px solid var(--border)}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>button:disabled{opacity:.5; cursor:not-allowed}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.chips{display:flex; flex-wrap:wrap; gap:8px}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>/* Doubled vertical spacing for grouped variables */</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.chip{background:var(--chip); border:1px solid var(--chip-b); padding:6px 10px; border-radius:999px; font-size:12px; display:inline-block; margin:12px 10px 12px 0}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>table{width:100%; border-collapse:separate; border-spacing:0; margin-top:12px}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>thead th{position:sticky; top:0; background:#f4f7ff; z-index:2}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>th, td{border-bottom:1px solid var(--border); padding:10px; text-align:left; vertical-align:top; font-size:14px}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>tbody tr:hover{background:#f9fbff}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.cell{border-radius:8px; padding:6px 8px; display:inline-block}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.green{background:rgba(21,163,119,.12); outline:1px solid rgba(21,163,119,.35)}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.orange{background:rgba(183,121,31,.12); outline:1px solid rgba(183,121,31,.35)}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.red{background:rgba(214,69,69,.12); outline:1px solid rgba(214,69,69,.35)}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.score{font-weight:700}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.legend{display:flex; gap:12px; align-items:center; color:var(--muted); font-size:13px}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.swatch{width:14px; height:14px; border-radius:4px; display:inline-block; margin-right:6px}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.swatch.g{background:var(--green)} .swatch.o{background:var(--orange)} .swatch.r{background:var(--red)}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.muted{color:var(--muted)}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.small{font-size:12px}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>.colwrap{overflow:auto}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;/style&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/head&gt;</span></p>
+<p class="p1"><span class="s1">&lt;body&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;div class="wrap"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;h1&gt;Diagnosis Guessing Game&lt;/h1&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div class="card" style="margin-top:12px"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;div class="row" style="align-items:end"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div style="flex:0 0 auto"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>&lt;button id="newRoundBtn"&gt;🎲 New Round&lt;/button&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;div class="card" style="margin-top:16px"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;div class="row"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>&lt;label&gt;Your Guess&lt;/label&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>&lt;input id="guess" list="diagnosisList" type="text" placeholder="Start typing…" /&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>&lt;datalist id="diagnosisList"&gt;&lt;/datalist&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;div style="align-self:end"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>&lt;button id="guessBtn"&gt;Add Guess&lt;/button&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;div class="legend" style="margin-top:10px"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;span&gt;&lt;span class="swatch g"&gt;&lt;/span&gt;Green = exact/very close&lt;/span&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;span&gt;&lt;span class="swatch o"&gt;&lt;/span&gt;Orange = partially similar&lt;/span&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;span&gt;&lt;span class="swatch r"&gt;&lt;/span&gt;Red = different&lt;/span&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;div class="colwrap"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;table id="table"&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>&lt;thead&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;tr&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">              </span>&lt;th&gt;Guess&lt;/th&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">              </span>&lt;th&gt;System&lt;/th&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">              </span>&lt;th&gt;Age group&lt;/th&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">              </span>&lt;th&gt;Epidemiology&lt;/th&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">              </span>&lt;th&gt;Etiology&lt;/th&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">              </span>&lt;th&gt;Key findings&lt;/th&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">              </span>&lt;th&gt;Management&lt;/th&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">              </span>&lt;th&gt;Course&lt;/th&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">              </span>&lt;th&gt;Score&lt;/th&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">            </span>&lt;/tr&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>&lt;/thead&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">          </span>&lt;tbody&gt;&lt;/tbody&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">        </span>&lt;/table&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>&lt;/div&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;p class="small muted" style="margin-top:10px"&gt;Educational use only. Not medical advice.&lt;/p&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>&lt;/div&gt;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">&lt;script&gt;</span></p>
+<p class="p1"><span class="s1">// -----------------------------</span></p>
+<p class="p1"><span class="s1">// Built-in dataset (CSV) — 30 major pathologies</span></p>
+<p class="p1"><span class="s1">// -----------------------------</span></p>
+<p class="p1"><span class="s1">const CSV_30 = `Diagnosis,Aliases,System,AgeGroup,Epidemiology,Etiology,KeyFindings,Management,TypicalCourse</span></p>
+<p class="p1"><span class="s1">pneumonia,PNA,respiratory,child;older adult,winter;daycare,infectious-bacterial,fever;cough;crackles,supportive;antibiotics;oxygen,acute</span></p>
+<p class="p1"><span class="s1">pneumothorax,PTX,respiratory,all ages,tall-thin-adolescent;smoker,traumatic;spontaneous,sudden dyspnea;pleuritic pain;hyperresonance,needle decompression;chest tube;oxygen,acute</span></p>
+<p class="p1"><span class="s1">bronchiolitis,,respiratory,infant;toddler,winter;daycare,infectious-viral,wheezing;cough;fever,supportive;oxygen,acute</span></p>
+<p class="p1"><span class="s1">constipation,,gastrointestinal,child;adult,low-fiber;sedentary,functional,infrequent stools;straining;hard stools,fluids;fiber;laxatives,chronic</span></p>
+<p class="p1"><span class="s1">asthma exacerbation,asthma,respiratory,child;adolescent;adult,atopy;viral-trigger;exercise,obstructive,wheezing;cough;prolonged expiration,bronchodilators;steroids;oxygen,acute</span></p>
+<p class="p1"><span class="s1">croup,laryngotracheobronchitis,ENT,infant;toddler,winter;daycare,infectious-viral,barking cough;stridor;hoarseness,steroids;nebulized epinephrine;supportive,acute</span></p>
+<p class="p1"><span class="s1">epiglottitis,hib epiglottitis,ENT,child;adult,unvaccinated;rapid onset,infectious-bacterial,drooling;tripod;stridor,airway;antibiotics;steroids,acute</span></p>
+<p class="p1"><span class="s1">acute otitis media,AOM,ENT,infant;child,daycare;winter,infectious-bacterial,ear pain;fever;bulging tympanic membrane,analgesics;antibiotics,acute</span></p>
+<p class="p1"><span class="s1">streptococcal pharyngitis,strep throat,ENT,child;adolescent,winter;crowding,infectious-bacterial,sore throat;tonsillar exudates;fever,antibiotics;supportive,acute</span></p>
+<p class="p1"><span class="s1">influenza,flu,respiratory,all ages,winter;exposure,infectious-viral,fever;myalgia;cough,antivirals;supportive,acute</span></p>
+<p class="p1"><span class="s1">viral gastroenteritis,stomach flu,gastrointestinal,child;adult,winter;outbreak,infectious-viral,vomiting;watery diarrhea;cramps,oral rehydration;supportive,acute</span></p>
+<p class="p1"><span class="s1">acute appendicitis,appendicitis,gastrointestinal,adolescent;young adult,low fiber;fecalith,infectious-bacterial;obstructive,periumbilical pain;migrates to RLQ;anorexia,surgery;antibiotics,acute</span></p>
+<p class="p1"><span class="s1">intussusception,,gastrointestinal,infant;toddler,viral lead point;male,obstructive,intermittent colicky pain;currant jelly stools;sausage mass,air enema;surgery,acute</span></p>
+<p class="p1"><span class="s1">pyloric stenosis,,gastrointestinal,infant,firstborn male;family history,congenital,projectile nonbilious vomiting;olive mass;dehydration,IV fluids;surgery,acute</span></p>
+<p class="p1"><span class="s1">urinary tract infection,UTI,renal/urology,infant;child;adult,female;sexual activity,infectious-bacterial,dysuria;frequency;suprapubic pain,antibiotics;fluids,acute</span></p>
+<p class="p1"><span class="s1">pyelonephritis,,renal/urology,adolescent;adult,female;pregnancy,infectious-bacterial,fever;flank pain;CVA tenderness,antibiotics;IV fluids,acute</span></p>
+<p class="p1"><span class="s1">bacterial meningitis,meningitis,neurology,infant;child;older adult,unvaccinated;crowding,infectious-bacterial,fever;neck stiffness;altered mental status,antibiotics;steroids;IV fluids,acute</span></p>
+<p class="p1"><span class="s1">sepsis,,immunology,all ages,immunocompromised;post-op,infectious-bacterial,fever;hypotension;tachycardia,IV fluids;antibiotics;oxygen,acute</span></p>
+<p class="p1"><span class="s1">cellulitis,,dermatology,child;adult,skin break;diabetes,infectious-bacterial,erythema;warmth;tenderness,antibiotics;elevation,acute</span></p>
+<p class="p1"><span class="s1">atopic dermatitis,eczema,dermatology,infant;child;adolescent,atopy;family history,autoimmune;functional,pruritic plaques;flexural involvement;dry skin,emollients;steroids,chronic</span></p>
+<p class="p1"><span class="s1">diabetic ketoacidosis,DKA,endocrine,adolescent;young adult,diabetes type 1;infection trigger,metabolic,polyuria;polydipsia;fruity breath,IV fluids;insulin,acute</span></p>
+<p class="p1"><span class="s1">hypoglycemia,,endocrine,all ages,insulin use;poor intake,metabolic,diaphoresis;confusion;tremor,oral glucose;IV dextrose,acute</span></p>
+<p class="p1"><span class="s1">st-elevation myocardial infarction,STEMI,cardiovascular,adult;older adult,smoker;hypertension;hyperlipidemia,ischemic;thrombotic,chest pain;radiates to arm;diaphoresis,antiplatelet;anticoagulation;thrombolysis,acute</span></p>
+<p class="p1"><span class="s1">acute decompensated heart failure,ADHF,cardiovascular,older adult,prior MI;hypertension,functional,orthopnea;PND;edema,diuretics;oxygen;supportive,acute</span></p>
+<p class="p1"><span class="s1">pulmonary embolism,PE,cardiovascular,adult;older adult,immobility;OCP use;pregnancy,thrombotic,pleuritic chest pain;dyspnea;tachycardia,anticoagulation;thrombolysis;oxygen,acute</span></p>
+<p class="p1"><span class="s1">deep vein thrombosis,DVT,cardiovascular,adult;older adult,immobility;malignancy,thrombotic,calf pain;swelling;warmth,anticoagulation,acute</span></p>
+<p class="p1"><span class="s1">ischemic stroke,cerebral infarction,neurology,older adult,hypertension;atrial fibrillation;diabetes,ischemic,acute focal deficit;aphasia;hemiparesis,thrombolysis;antiplatelet,acute</span></p>
+<p class="p1"><span class="s1">migraine,,neurology,adolescent;young adult;adult,female;stress trigger,idiopathic;functional,throbbing headache;photophobia;nausea,NSAIDs;triptans;antiemetics,acute</span></p>
+<p class="p1"><span class="s1">acute bacterial sinusitis,sinusitis,ENT,child;adult,winter;after viral URI,infectious-bacterial,facial pain;purulent nasal discharge;tooth pain,antibiotics;decongestants,acute</span></p>
+<p class="p1"><span class="s1">allergic rhinitis,hay fever,ENT,child;adolescent;adult,seasonal;atopy,autoimmune,clear rhinorrhea;itchy eyes;sneezing,antihistamines;steroids,subacute`;</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">// -----------------------------</span></p>
+<p class="p1"><span class="s1">// Minimal logic (random target only)</span></p>
+<p class="p1"><span class="s1">// -----------------------------</span></p>
+<p class="p1"><span class="s1">const GREEN=0.8, ORANGE=0.4;</span></p>
+<p class="p1"><span class="s1">let DATA=[]; // normalized rows</span></p>
+<p class="p1"><span class="s1">let BY_NAME=new Map(); // alias → canonical</span></p>
+<p class="p1"><span class="s1">let TARGET=null; // current target diagnosis row</span></p>
+<p class="p1"><span class="s1">let GUESSED=new Set();</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">const RELATEDNESS={</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>system:{ 'ent':{'respiratory':0.6}, 'hepatobiliary':{'gastrointestinal':0.7 } },</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>etiology:{ 'infectious-bacterial':{'infectious-viral':0.8,'autoimmune':0.2}, 'infectious-viral':{'infectious-bacterial':0.8} },</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>management:{ 'antibiotics':{'antivirals':0.7,'supportive':0.3}, 'needle decompression':{'chest tube':0.9} },</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>course:{ 'acute':{'subacute':0.6,'chronic':0.2}, 'subacute':{'chronic':0.5} },</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>age:{ 'extremes of age':{'neonate (0-28d)':0.8,'older adult (65+)':0.8}, 'child':{'toddler':0.6,'adolescent':0.6}, 'adult':{'young adult (19-39)':0.6,'middle adult (40-64)':0.6} }</span></p>
+<p class="p1"><span class="s1">};</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">function normalizeToken(s){ return (s||'').toString().trim().toLowerCase(); }</span></p>
+<p class="p1"><span class="s1">function splitTags(s){ return (s? s.split(';'):[]).map(t=&gt;normalizeToken(t)).filter(Boolean); }</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">function parseCSV(text){</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const lines=text.trim().split('\n').filter(l=&gt;l.trim().length&gt;0);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const headers=lines[0].split(',').map(h=&gt;h.trim());</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>return lines.slice(1).map(line=&gt;{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const cells=line.split(',');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>const obj={}; headers.forEach((h,i)=&gt;{ obj[h]=cells[i]?cells[i].trim():''; });</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>return obj;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>});</span></p>
+<p class="p1"><span class="s1">}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">function normalizeRow(r){</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>return {</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>diagnosis: normalizeToken(r.Diagnosis||r.diagnosis),</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>aliases: splitTags(r.Aliases||r.aliases).concat([]),</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>system: normalizeToken(r.System||r.system),</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>age: splitTags(r.AgeGroup||r.agegroup||r.age),</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>epidemiology: splitTags(r.Epidemiology||r.epidemiology),</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>etiology: splitTags(r.Etiology||r.etiology),</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>findings: splitTags(r.KeyFindings||r.keyfindings||r.findings),</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>management: splitTags(r.Management||r.management),</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>course: normalizeToken(r.TypicalCourse||r.course||r.typicalcourse)</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>};</span></p>
+<p class="p1"><span class="s1">}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">function loadDataset(rows){</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>DATA = rows.map(normalizeRow).filter(r=&gt;r.diagnosis);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>BY_NAME = new Map();</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>DATA.forEach(r=&gt;{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>BY_NAME.set(r.diagnosis, r.diagnosis);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>r.aliases.forEach(a=&gt;BY_NAME.set(a, r.diagnosis));</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>});</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>// Fill datalist for guesses</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const dl=document.getElementById('diagnosisList');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>dl.innerHTML = DATA.map(r=&gt;`&lt;option value="${escapeHtml(title(r.diagnosis))}"&gt;&lt;/option&gt;`).join('') +</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">                 </span>DATA.flatMap(r=&gt;r.aliases.map(a=&gt;`&lt;option value="${escapeHtml(title(a))}"&gt;&lt;/option&gt;`)).join('');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>resetGame();</span></p>
+<p class="p1"><span class="s1">}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">function title(s){ return (s||'').split(' ').map(w=&gt; w? (w[0].toUpperCase()+w.slice(1)) : '').join(' '); }</span></p>
+<p class="p1"><span class="s1">function escapeHtml(str){ return str.replace(/[&amp;&lt;&gt;"']/g, m=&gt;({"&amp;":"&amp;amp;","&lt;":"&amp;lt;","&gt;":"&amp;gt;","\"":"&amp;quot;","'":"&amp;#39;"}[m])); }</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">function relScore(domain,a,b){</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>a=normalizeToken(a); b=normalizeToken(b);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>if(!a||!b) return 0;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>if(a===b) return 1;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const m=RELATEDNESS[domain]||{};</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>if(m[a]&amp;&amp;m[a][b]!=null) return m[a][b];</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>if(m[b]&amp;&amp;m[b][a]!=null) return m[b][a];</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>if(domain==='age' &amp;&amp; (a==='all ages'||b==='all ages')) return 0.5;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>return 0;</span></p>
+<p class="p1"><span class="s1">}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">function jaccard(aSet,bSet){</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>if(aSet.length===0 &amp;&amp; bSet.length===0) return 1;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const A=new Set(aSet), B=new Set(bSet);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>let inter=0; A.forEach(x=&gt;{ if(B.has(x)) inter++; });</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const uni=new Set([...A,...B]).size;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>return uni? inter/uni : 0;</span></p>
+<p class="p1"><span class="s1">}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">function setRelatedness(domain,aSet,bSet){</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>if(aSet.length===0 &amp;&amp; bSet.length===0) return 1;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>function bestSum(X,Y){</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>if(X.length===0||Y.length===0) return 0;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>let sum=0; X.forEach(x=&gt;{</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>let best=0; Y.forEach(y=&gt;{ best=Math.max(best, relScore(domain,x,y)); });</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">      </span>sum+=best;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>});</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>return sum/ X.length;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const ab=bestSum(aSet,bSet), ba=bestSum(bSet,aSet);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>return (ab+ba)/2;</span></p>
+<p class="p1"><span class="s1">}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">function ageSimilarity(aSet,bSet){</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const exact=jaccard(aSet,bSet);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const rel=setRelatedness('age',aSet,bSet);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>return Math.max(exact, rel);</span></p>
+<p class="p1"><span class="s1">}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">function systemSimilarity(a,b){ if(!a&amp;&amp;!b) return 1; if(!a||!b) return 0; if(a===b) return 1; return relScore('system',a,b); }</span></p>
+<p class="p1"><span class="s1">function etiologySimilarity(aSet,bSet){ return Math.max(jaccard(aSet,bSet), setRelatedness('etiology',aSet,bSet)); }</span></p>
+<p class="p1"><span class="s1">function managementSimilarity(aSet,bSet){ return Math.max(jaccard(aSet,bSet), setRelatedness('management',aSet,bSet)); }</span></p>
+<p class="p1"><span class="s1">function courseSimilarity(a,b){ if(!a&amp;&amp;!b) return 1; if(!a||!b) return 0; if(a===b) return 1; return relScore('course',a,b); }</span></p>
+<p class="p1"><span class="s1">function colorFor(score){ if(score&gt;=0.8) return 'green'; if(score&gt;=0.4) return 'orange'; return 'red'; }</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">function resetGame(){</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>GUESSED = new Set();</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>document.querySelector('#table tbody').innerHTML='';</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>document.getElementById('guess').value='';</span></p>
+<p class="p1"><span class="s1">}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">function pickRandom(){ if(DATA.length===0) return; TARGET = DATA[Math.floor(Math.random()*DATA.length)]; }</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">function addGuess(input){</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>if(!TARGET){ alert('Click New Round to start.'); return; }</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>let key=normalizeToken(input); if(!key) return;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>if(BY_NAME.has(key)) key=BY_NAME.get(key);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const row=DATA.find(r=&gt;r.diagnosis===key);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>if(!row){ alert('Not found. Try another term.'); return; }</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>if(GUESSED.has(key)) return;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>GUESSED.add(key);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>renderRow(row);</span></p>
+<p class="p1"><span class="s1">}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">function renderRow(guess){</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const t=TARGET;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const scoreSystem = systemSimilarity(guess.system, t.system);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const scoreAge = ageSimilarity(guess.age, t.age);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const scoreEpi = jaccard(guess.epidemiology, t.epidemiology);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const scoreEti = etiologySimilarity(guess.etiology, t.etiology);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const scoreFind = jaccard(guess.findings, t.findings);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const scoreMgmt = managementSimilarity(guess.management, t.management);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const scoreCourse = courseSimilarity(guess.course, t.course);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const mean = avg([scoreSystem,scoreAge,scoreEpi,scoreEti,scoreFind,scoreMgmt,scoreCourse]);</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const tr=document.createElement('tr');</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>tr.innerHTML = `</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;td&gt;&lt;strong&gt;${escapeHtml(title(guess.diagnosis))}&lt;/strong&gt;&lt;/td&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>${colorCell(scoreSystem, disp([guess.system]))}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>${colorCell(scoreAge, disp(guess.age))}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>${colorCell(scoreEpi, disp(guess.epidemiology))}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>${colorCell(scoreEti, disp(guess.etiology))}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>${colorCell(scoreFind, disp(guess.findings))}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>${colorCell(scoreMgmt, disp(guess.management))}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>${colorCell(scoreCourse, disp([guess.course]))}</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>&lt;td class="score"&gt;${(mean*100).toFixed(0)}%&lt;/td&gt;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>`;</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>document.querySelector('#table tbody').appendChild(tr);</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>if([scoreSystem,scoreAge,scoreEpi,scoreEti,scoreFind,scoreMgmt,scoreCourse].every(s=&gt;s&gt;=0.8)){</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">    </span>setTimeout(()=&gt;alert('🎉 Correct! You found the diagnosis.'), 50);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>}</span></p>
+<p class="p1"><span class="s1">}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">function colorCell(score, html){</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const cls=colorFor(score);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>const pct=(score*100).toFixed(0);</span></p>
+<p class="p1"><span class="s1"><span class="Apple-converted-space">  </span>return `&lt;td title="Similarity ${pct}%"&gt;&lt;span class="cell ${cls}"&gt;${html}&lt;/span&gt;&lt;/td&gt;`;</span></p>
+<p class="p1"><span class="s1">}</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">function avg(xs){ return xs.reduce((a,b)=&gt;a+b,0)/xs.length; }</span></p>
+<p class="p1"><span class="s1">function disp(arr){ if(!arr||arr.length===0) return '&lt;span class="muted"&gt;—&lt;/span&gt;'; return arr.map(x=&gt;`&lt;span class="chip"&gt;${escapeHtml(title(x))}&lt;/span&gt;`).join(' '); }</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">// Events</span></p>
+<p class="p1"><span class="s1">const guessInput=document.getElementById('guess');</span></p>
+<p class="p1"><span class="s1">const guessBtn=document.getElementById('guessBtn');</span></p>
+<p class="p1"><span class="s1">function submitGuess(){ addGuess(guessInput.value); guessInput.value=''; guessInput.focus(); }</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">guessBtn.addEventListener('click', submitGuess);</span></p>
+<p class="p1"><span class="s1">guessInput.addEventListener('keydown', e=&gt;{ if(e.key==='Enter'){ e.preventDefault(); submitGuess(); }});</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">document.getElementById('newRoundBtn').addEventListener('click', ()=&gt;{ pickRandom(); resetGame(); });</span></p>
+<p class="p2"><span class="s1"></span><br></p>
+<p class="p1"><span class="s1">// Boot</span></p>
+<p class="p1"><span class="s1">const rows = parseCSV(CSV_30);</span></p>
+<p class="p1"><span class="s1">loadDataset(rows);</span></p>
+<p class="p1"><span class="s1">pickRandom();</span></p>
+<p class="p1"><span class="s1">&lt;/script&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/body&gt;</span></p>
+<p class="p1"><span class="s1">&lt;/html&gt;</span></p>
+</body>
+</html>
