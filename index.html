@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Guess the Diagnosis...🤔</title>
+  <title>Diagnosis Guessing Game</title>
   <style>
     :root{
       /* Light theme */
@@ -18,7 +18,7 @@
     .row{display:flex; gap:12px; flex-wrap:wrap}
     .row > *{flex:1}
     label{font-size:12px; color:var(--muted); display:block; margin-bottom:6px}
-    input[type="text"]{width:100%; background:#ffffff; color:var(--ink); border:1px solid #dce1eb; border-radius:10px; padding:10px 12px}
+    input[type="text"], textarea, select{width:100%; background:#ffffff; color:var(--ink); border:1px solid #dce1eb; border-radius:10px; padding:10px 12px}
     button{background:var(--accent); color:#ffffff; border:0; border-radius:12px; padding:10px 14px; font-weight:600; cursor:pointer}
     button.ghost{background:transparent; color:var(--ink); border:1px solid var(--border)}
     button:disabled{opacity:.5; cursor:not-allowed}
@@ -42,54 +42,20 @@
     .muted{color:var(--muted)}
     .small{font-size:12px}
     .colwrap{overflow:auto}
-    /* Shift the Add Guess button slightly right */
-    .rightShift{ margin-left: 20px }
   </style>
 </head>
 <body>
   <div class="wrap">
-    <h1>Guess the Diagnosis...🤔</h1>
+    <h1>Diagnosis Guessing Game</h1>
 
-    <!-- Top control card: description + randomizer -->
-    <!-- TOP CARD: Toggleable instructions -->
-<div class="card" style="margin-top:12px">
-  <div class="row" style="align-items:center; justify-content:space-between">
-    <div style="flex:1 1 auto">
-      <button id="toggleInstructions" class="toggle-btn" aria-expanded="false" aria-controls="instructionsPanel">
-        Show Instructions
-        <span class="toggle-icon" aria-hidden="true">▼</span>
-      </button>
+    <div class="card" style="margin-top:12px">
+      <div class="row" style="align-items:end">
+        <div style="flex:0 0 auto">
+          <button id="newRoundBtn">🎲 New Round</button>
+        </div>
+      </div>
     </div>
-  </div>
 
-  <div id="instructionsPanel" class="instructions-panel" hidden>
-    <div class="small muted" style="margin:12px 0 0 0">
-      <p><em>(Like Wordle, but with stethoscopes!)</em></p>
-      <p><strong>Welcome to "Guess the Diagnosis"</strong> — your daily dose of diagnostic fun! Your mission: crack the mystery diagnosis using your brain, your gut, and a little bit of luck.</p>
-
-      <p><strong>1️⃣ Make Your First Guess</strong><br>
-      Think of any diagnosis that might fit the case. Type it in and click <strong>Add Diagnosis</strong>.</p>
-
-      <p><strong>2️⃣ Read the Color Clues</strong><br>
-      Each column compares your guess with the hidden diagnosis:</p>
-      <ul style="margin:6px 0 0 18px; padding:0">
-        <li><em>System 🫀🫁</em>: Which organ system is affected?</li>
-        <li><em>Age 👶👩‍🦳</em>: What’s the typical patient age?</li>
-        <li><em>Epidemiology 🌍</em>: Who usually gets it?</li>
-        <li><em>(Plus other juicy medical details)</em></li>
-      </ul>
-      <p>Colors tell the story:<br>
-        🟩 <strong>Green</strong> = Bingo! Exact or very close match.<br>
-        🟧 <strong>Orange</strong> = You’re warm—partially similar.<br>
-        🟥 <strong>Red</strong> = Nope—completely different.
-      </p>
-
-      <p><strong>3️⃣ Refine Your Guess</strong><br>
-      Use the color clues to adjust your thinking.<br>
-      <em>Example:</em> If the system is green but age is red, guess another diagnosis of the same system but with a different patient profile.</p>
-
-      <p><strong>4️⃣ Win Like a Pro</strong><br>
-      Aim to get all columns green as fast as possible! Or keep
     <div class="card" style="margin-top:16px">
       <div class="row">
         <div>
@@ -97,10 +63,9 @@
           <input id="guess" list="diagnosisList" type="text" placeholder="Start typing…" />
           <datalist id="diagnosisList"></datalist>
         </div>
-        <div style="align-self:end; display:flex; gap:8px">
-  <button id="guessBtn" class="rightShift">Add Diagnosis</button>
-  <button id="resetBtn" class="ghost rightShift">Reset Diagnosis</button>
-</div>
+        <div style="align-self:end">
+          <button id="guessBtn">Add Guess</button>
+        </div>
       </div>
       <div class="legend" style="margin-top:10px">
         <span><span class="swatch g"></span>Green = exact/very close</span>
@@ -281,7 +246,7 @@ function resetGame(){
 function pickRandom(){ if(DATA.length===0) return; TARGET = DATA[Math.floor(Math.random()*DATA.length)]; }
 
 function addGuess(input){
-  if(!TARGET){ alert('Click Reset Diagnosis to start.'); return; }
+  if(!TARGET){ alert('Click New Round to start.'); return; }
   let key=normalizeToken(input); if(!key) return;
   if(BY_NAME.has(key)) key=BY_NAME.get(key);
   const row=DATA.find(r=>r.diagnosis===key);
@@ -312,7 +277,8 @@ function renderRow(guess){
     ${colorCell(scoreFind, disp(guess.findings))}
     ${colorCell(scoreMgmt, disp(guess.management))}
     ${colorCell(scoreCourse, disp([guess.course]))}
-    <td class="score">${(mean*100).toFixed(0)}%</td>`;
+    <td class="score">${(mean*100).toFixed(0)}%</td>
+  `;
   document.querySelector('#table tbody').appendChild(tr);
 
   if([scoreSystem,scoreAge,scoreEpi,scoreEti,scoreFind,scoreMgmt,scoreCourse].every(s=>s>=0.8)){
@@ -337,7 +303,7 @@ function submitGuess(){ addGuess(guessInput.value); guessInput.value=''; guessIn
 guessBtn.addEventListener('click', submitGuess);
 guessInput.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); submitGuess(); }});
 
-document.getElementById('resetBtn').addEventListener('click', ()=>{ pickRandom(); resetGame(); });
+document.getElementById('newRoundBtn').addEventListener('click', ()=>{ pickRandom(); resetGame(); });
 
 // Boot
 const rows = parseCSV(CSV_30);
