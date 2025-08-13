@@ -318,7 +318,7 @@ function submitGuess(){ addGuess(guessInput.value); guessInput.value=''; guessIn
 guessBtn.addEventListener('click', submitGuess);
 guessInput.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); submitGuess(); }});
 
-document.getElementById('newRoundBtn').addEventListener('click', ()=>{ pickRandom(); resetGame(); }); resetGame(); }); resetGame(); });
+document.getElementById('newRoundBtn').addEventListener('click', ()=>{ pickRandom(); resetGame(); });
 
 // Boot
 const rows = parseCSV(CSV_30);
