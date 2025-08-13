@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Guess the Diagnosis...🤔</title>
   <style>
+    button{transition:transform .12s ease, box-shadow .12s ease;}
+    button:hover{transform:translateY(-1px); box-shadow:0 6px 16px rgba(10,20,60,.08);}
     :root{
       --bg:#f7faff; --panel:#ffffff; --ink:#0b1220; --muted:#4b5565;
       --green:#15a377; --orange:#b7791f; --red:#d64545; --accent:#2563eb;
@@ -117,7 +119,6 @@
     <p class="small muted" style="margin-top:10px">Educational use only. Not medical advice.</p>
   </div>
   <script>
-    
     const CSV_30 = `Diagnosis,Aliases,System,AgeGroup,Epidemiology,Etiology,Onset,KeyFindings,Investigation,Management,SeverityRisk
 Myocardial Infarction,Heart attack; MI,Cardiovascular,Adults/Elderly,Common in males >50,Vascular,Acute,Chest pain; sweating,ECG; Troponin,Mixed,High
 Pneumonia,Lower respiratory tract infection,Respiratory,All ages,Common in elderly,Infection,Acute,Fever; cough,Chest X-ray,Medication,Moderate
@@ -184,12 +185,30 @@ Anemia (Iron Deficiency),,Hematology,All ages,Common worldwide,Unknown,Chronic,F
       age:{ 'extremes of age':{'neonate (0-28d)':0.8,'older adult (65+)':0.8}, 'child':{'toddler':0.6,'adolescent':0.6}, 'adult':{'young adult (19-39)':0.6,'middle adult (40-64)':0.6} }
     };
     function normalizeToken(s){ return (s||'').toString().trim().toLowerCase(); }
-    function splitTags(s){ return (s? s.split(';'):[]).map(t=>normalizeToken(t)).filter(Boolean); }
+    function splitTags(s){ if(!s) return []; return s.split(';').map(t=>normalizeToken(t)).filter(Boolean); }
     function parseCSV(text){
-      const lines=text.trim().split('\n').filter(l=>l.trim().length>0);
-      const headers=lines[0].split(',').map(h=>h.trim());
+      const lines = text.replace(/\r/g,'').split('\n').filter(l=>l.trim().length>0);
+      if(lines.length===0) return [];
+      function parseLine(line){
+        const cells=[]; let cur=''; let inQ=false;
+        for(let i=0;i<line.length;i++){
+          const ch=line[i];
+          if(inQ){
+            if(ch==='"' && line[i+1]==='"'){ cur+='"'; i++; }
+            else if(ch==='"'){ inQ=false; }
+            else { cur+=ch; }
+          }else{
+            if(ch===','){ cells.push(cur.trim()); cur=''; }
+            else if(ch==='"'){ inQ=true; }
+            else { cur+=ch; }
+          }
+        }
+        cells.push(cur.trim());
+        return cells;
+      }
+      const headers = parseLine(lines[0]).map(h=>h.trim());
       return lines.slice(1).map(line=>{
-        const cells=line.split(',');
+        const cells = parseLine(line);
         const obj={}; headers.forEach((h,i)=>{ obj[h]=cells[i]?cells[i].trim():''; });
         return obj;
       });
@@ -197,14 +216,14 @@ Anemia (Iron Deficiency),,Hematology,All ages,Common worldwide,Unknown,Chronic,F
     function normalizeRow(r){
       return {
         diagnosis: normalizeToken(r.Diagnosis||r.diagnosis),
-        aliases: splitTags(r.Aliases||r.aliases).concat([]),
+        aliases: splitTags(r.Aliases||r.aliases),
         system: normalizeToken(r.System||r.system),
         age: splitTags(r.AgeGroup||r.agegroup||r.age),
         epidemiology: splitTags(r.Epidemiology||r.epidemiology),
         etiology: splitTags(r.Etiology||r.etiology),
         findings: splitTags(r.KeyFindings||r.keyfindings||r.findings),
         management: splitTags(r.Management||r.management),
-        course: normalizeToken(r.TypicalCourse||r.course||r.typicalcourse)
+        course: normalizeToken(r.Onset||r.onset||r.TypicalCourse||r.course||r.typicalcourse)
       };
     }
     function loadDataset(rows){
@@ -336,24 +355,39 @@ Anemia (Iron Deficiency),,Hematology,All ages,Common worldwide,Unknown,Chronic,F
     const rows = parseCSV(CSV_30);
     loadDataset(rows);
     pickRandom();
-    (function(){
+    function layoutOrgans(){
       const el = document.getElementById('organConfetti');
       if (!el) return;
+      el.innerHTML = '';
       const icons = ['🫀','🫁','🧠','🩺','🧬'];
       const count = 20;
-      for (let i=0; i<count; i++){
+      const placed = [];
+      const W = window.innerWidth;
+      const H = window.innerHeight;
+      const margin = 32;
+      for(let i=0;i<count;i++){
+        let attempts=0; let ok=false; let x=0,y=0,scale=1,r=48;
+        while(attempts<200 && !ok){
+          scale = 1 + Math.random()*0.4;
+          const size = 96*scale;
+          r = size*0.5;
+          x = margin + r + Math.random()*(W - 2*(margin + r));
+          y = margin + r + Math.random()*(H - 2*(margin + r));
+          ok = placed.every(p => Math.hypot(x-p.x,y-p.y) >= (r + p.r + 12));
+          attempts++;
+        }
         const span = document.createElement('span');
         span.className = 'bit';
         span.textContent = icons[i % icons.length];
-        const x = Math.random()*100;
-        const y = Math.random()*100;
-        const scale = 0.9 + Math.random()*0.6;
-        span.style.left = x+'vw';
-        span.style.top  = y+'vh';
+        span.style.left = x+'px';
+        span.style.top  = y+'px';
         span.style.transform = `translate(-50%,-50%) scale(${scale})`;
         el.appendChild(span);
+        placed.push({x,y,r});
       }
-    })();
+    }
+    layoutOrgans();
+    window.addEventListener('resize', layoutOrgans);
   </script>
 </body>
 </html>
