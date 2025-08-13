@@ -43,7 +43,7 @@
     .small{font-size:12px}
     .colwrap{overflow:auto}
     /* Shift the Add Guess button slightly right */
-    .rightShift{ margin-left: 8px }
+    .rightShift{ margin-left: 20px }
   </style>
 </head>
 <body>
@@ -51,42 +51,45 @@
     <h1>Guess the Diagnosis...🤔</h1>
 
     <!-- Top control card: description + randomizer -->
-    <div class="card" style="margin-top:12px">
-  <div class="small muted" style="margin:0">
-    <p><em>(Like Wordle, but with stethoscopes!)</em></p>
-    <p><strong>Welcome to "Guess the Diagnosis"</strong> — your daily dose of diagnostic fun! Your mission: crack the mystery diagnosis using your brain, your gut, and a little bit of luck.</p>
-    <p><strong>1️⃣ Make Your First Guess</strong><br>
-    Think of any diagnosis that might fit the case. Type it in and click <strong>Add Diagnosis</strong>.</p>
-    <p><strong>2️⃣ Read the Color Clues</strong><br>
-    Each column compares your guess with the hidden diagnosis:</p>
-    <ul style="margin:6px 0 0 18px; padding:0">
-      <li><em>System 🫀🫁</em>: Which organ system is affected?</li>
-      <li><em>Age 👶👩‍🦳</em>: What’s the typical patient age?</li>
-      <li><em>Epidemiology 🌍</em>: Who usually gets it?</li>
-      <li><em>(Plus other juicy medical details)</em></li>
-    </ul>
-    <p>Colors tell the story:<br>
-      🟩 <strong>Green</strong> = Bingo! Exact or very close match.<br>
-      🟧 <strong>Orange</strong> = You’re warm—partially similar.<br>
-      🟥 <strong>Red</strong> = Nope—completely different.
-    </p>
-    <p><strong>3️⃣ Refine Your Guess</strong><br>
-    Use the color clues to adjust your thinking.<br>
-    <em>Example:</em> If the system is green but age is red, guess another diagnosis of the same system but with a different patient profile.</p>
-    <p><strong>4️⃣ Win Like a Pro</strong><br>
-    Aim to get all columns green as fast as possible! Or keep guessing until you hit the right combo.</p>
-    <p><strong>5️⃣ Start Fresh Anytime</strong><br>
-    Click <strong>Reset Diagnosis</strong> for a brand-new random case whenever you’re ready for the next challenge.</p>
-    <p><strong>💡 Pro Tip:</strong> The best players mix solid medical reasoning with wild guesses. Sometimes, the weird one is the winner.<br>
-    Now scrub in, doctor—your patient awaits! 🩺</p>
-  </div>
-</div>
-        </div>
-      
-      </div>
+    <!-- TOP CARD: Toggleable instructions -->
+<div class="card" style="margin-top:12px">
+  <div class="row" style="align-items:center; justify-content:space-between">
+    <div style="flex:1 1 auto">
+      <button id="toggleInstructions" class="toggle-btn" aria-expanded="false" aria-controls="instructionsPanel">
+        Show Instructions
+        <span class="toggle-icon" aria-hidden="true">▼</span>
+      </button>
     </div>
+  </div>
 
-    <!-- Guessing card -->
+  <div id="instructionsPanel" class="instructions-panel" hidden>
+    <div class="small muted" style="margin:12px 0 0 0">
+      <p><em>(Like Wordle, but with stethoscopes!)</em></p>
+      <p><strong>Welcome to "Guess the Diagnosis"</strong> — your daily dose of diagnostic fun! Your mission: crack the mystery diagnosis using your brain, your gut, and a little bit of luck.</p>
+
+      <p><strong>1️⃣ Make Your First Guess</strong><br>
+      Think of any diagnosis that might fit the case. Type it in and click <strong>Add Diagnosis</strong>.</p>
+
+      <p><strong>2️⃣ Read the Color Clues</strong><br>
+      Each column compares your guess with the hidden diagnosis:</p>
+      <ul style="margin:6px 0 0 18px; padding:0">
+        <li><em>System 🫀🫁</em>: Which organ system is affected?</li>
+        <li><em>Age 👶👩‍🦳</em>: What’s the typical patient age?</li>
+        <li><em>Epidemiology 🌍</em>: Who usually gets it?</li>
+        <li><em>(Plus other juicy medical details)</em></li>
+      </ul>
+      <p>Colors tell the story:<br>
+        🟩 <strong>Green</strong> = Bingo! Exact or very close match.<br>
+        🟧 <strong>Orange</strong> = You’re warm—partially similar.<br>
+        🟥 <strong>Red</strong> = Nope—completely different.
+      </p>
+
+      <p><strong>3️⃣ Refine Your Guess</strong><br>
+      Use the color clues to adjust your thinking.<br>
+      <em>Example:</em> If the system is green but age is red, guess another diagnosis of the same system but with a different patient profile.</p>
+
+      <p><strong>4️⃣ Win Like a Pro</strong><br>
+      Aim to get all columns green as fast as possible! Or keep
     <div class="card" style="margin-top:16px">
       <div class="row">
         <div>
