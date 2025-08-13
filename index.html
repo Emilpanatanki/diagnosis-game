@@ -117,37 +117,60 @@
     <p class="small muted" style="margin-top:10px">Educational use only. Not medical advice.</p>
   </div>
   <script>
-    const CSV_30 = `Diagnosis,Aliases,System,AgeGroup,Epidemiology,Etiology,KeyFindings,Management,TypicalCourse
-pneumonia,PNA,respiratory,child;older adult,winter;daycare,infectious-bacterial,fever;cough;crackles,supportive;antibiotics;oxygen,acute
-pneumothorax,PTX,respiratory,all ages,tall-thin-adolescent;smoker,traumatic;spontaneous,sudden dyspnea;pleuritic pain;hyperresonance,needle decompression;chest tube;oxygen,acute
-bronchiolitis,,respiratory,infant;toddler,winter;daycare,infectious-viral,wheezing;cough;fever,supportive;oxygen,acute
-constipation,,gastrointestinal,child;adult,low-fiber;sedentary,functional,infrequent stools;straining;hard stools,fluids;fiber;laxatives,chronic
-asthma exacerbation,asthma,respiratory,child;adolescent;adult,atopy;viral-trigger;exercise,obstructive,wheezing;cough;prolonged expiration,bronchodilators;steroids;oxygen,acute
-croup,laryngotracheobronchitis,ENT,infant;toddler,winter;daycare,infectious-viral,barking cough;stridor;hoarseness,steroids;nebulized epinephrine;supportive,acute
-epiglottitis,hib epiglottitis,ENT,child;adult,unvaccinated;rapid onset,infectious-bacterial,drooling;tripod;stridor,airway;antibiotics;steroids,acute
-acute otitis media,AOM,ENT,infant;child,daycare;winter,infectious-bacterial,ear pain;fever;bulging tympanic membrane,analgesics;antibiotics,acute
-streptococcal pharyngitis,strep throat,ENT,child;adolescent,winter;crowding,infectious-bacterial,sore throat;tonsillar exudates;fever,antibiotics;supportive,acute
-influenza,flu,respiratory,all ages,winter;exposure,infectious-viral,fever;myalgia;cough,antivirals;supportive,acute
-viral gastroenteritis,stomach flu,gastrointestinal,child;adult,winter;outbreak,infectious-viral,vomiting;watery diarrhea;cramps,oral rehydration;supportive,acute
-acute appendicitis,appendicitis,gastrointestinal,adolescent;young adult,low fiber;fecalith,infectious-bacterial;obstructive,periumbilical pain;migrates to RLQ;anorexia,surgery;antibiotics,acute
-intussusception,,gastrointestinal,infant;toddler,viral lead point;male,obstructive,intermittent colicky pain;currant jelly stools;sausage mass,air enema;surgery,acute
-pyloric stenosis,,gastrointestinal,infant,firstborn male;family history,congenital,projectile nonbilious vomiting;olive mass;dehydration,IV fluids;surgery,acute
-urinary tract infection,UTI,renal/urology,infant;child;adult,female;sexual activity,infectious-bacterial,dysuria;frequency;suprapubic pain,antibiotics;fluids,acute
-pyelonephritis,,renal/urology,adolescent;adult,female;pregnancy,infectious-bacterial,fever;flank pain;CVA tenderness,antibiotics;IV fluids,acute
-bacterial meningitis,meningitis,neurology,infant;child;older adult,unvaccinated;crowding,infectious-bacterial,fever;neck stiffness;altered mental status,antibiotics;steroids;IV fluids,acute
-sepsis,,immunology,all ages,immunocompromised;post-op,infectious-bacterial,fever;hypotension;tachycardia,IV fluids;antibiotics;oxygen,acute
-cellulitis,,dermatology,child;adult,skin break;diabetes,infectious-bacterial,erythema;warmth;tenderness,antibiotics;elevation,acute
-atopic dermatitis,eczema,dermatology,infant;child;adolescent,atopy;family history,autoimmune;functional,pruritic plaques;flexural involvement;dry skin,emollients;steroids,chronic
-diabetic ketoacidosis,DKA,endocrine,adolescent;young adult,diabetes type 1;infection trigger,metabolic,polyuria;polydipsia;fruity breath,IV fluids;insulin,acute
-hypoglycemia,,endocrine,all ages,insulin use;poor intake,metabolic,diaphoresis;confusion;tremor,oral glucose;IV dextrose,acute
-st-elevation myocardial infarction,STEMI,cardiovascular,adult;older adult,smoker;hypertension;hyperlipidemia,ischemic;thrombotic,chest pain;radiates to arm;diaphoresis,antiplatelet;anticoagulation;thrombolysis,acute
-acute decompensated heart failure,ADHF,cardiovascular,older adult,prior MI;hypertension,functional,orthopnea;PND;edema,diuretics;oxygen;supportive,acute
-pulmonary embolism,PE,cardiovascular,adult;older adult,immobility;OCP use;pregnancy,thrombotic,pleuritic chest pain;dyspnea;tachycardia,anticoagulation;thrombolysis;oxygen,acute
-deep vein thrombosis,DVT,cardiovascular,adult;older adult,immobility;malignancy,thrombotic,calf pain;swelling;warmth,anticoagulation,acute
-ischemic stroke,cerebral infarction,neurology,older adult,hypertension;atrial fibrillation;diabetes,ischemic,acute focal deficit;aphasia;hemiparesis,thrombolysis;antiplatelet,acute
-migraine,,neurology,adolescent;young adult;adult,female;stress trigger,idiopathic;functional,throbbing headache;photophobia;nausea,NSAIDs;triptans;antiemetics,acute
-acute bacterial sinusitis,sinusitis,ENT,child;adult,winter;after viral URI,infectious-bacterial,facial pain;purulent nasal discharge;tooth pain,antibiotics;decongestants,acute
-allergic rhinitis,hay fever,ENT,child;adolescent;adult,seasonal;atopy,autoimmune,clear rhinorrhea;itchy eyes;sneezing,antihistamines;steroids,subacute`;
+    
+    const CSV_30 = `Diagnosis,Aliases,System,AgeGroup,Epidemiology,Etiology,Onset,KeyFindings,Investigation,Management,SeverityRisk
+Myocardial Infarction,Heart attack; MI,Cardiovascular,Adults/Elderly,Common in males >50,Vascular,Acute,Chest pain; sweating,ECG; Troponin,Mixed,High
+Pneumonia,Lower respiratory tract infection,Respiratory,All ages,Common in elderly,Infection,Acute,Fever; cough,Chest X-ray,Medication,Moderate
+Asthma,Bronchial asthma,Respiratory,Children/Young Adults,Affects 5-10% population,Unknown,Acute/Recurrent,Wheeze; dyspnea,Spirometry,Mixed,Low
+Stroke,Cerebrovascular accident; CVA,Neurological,Adults/Elderly,Common in hypertensives,Vascular,Acute,Sudden weakness; facial droop,CT/MRI brain,Mixed,High
+Appendicitis,,Gastrointestinal,Teens/Young Adults,Common surgical emergency,Unknown,Acute,RLQ pain; fever,Clinical + Ultrasound,Surgery,Moderate
+Diabetic Ketoacidosis,DKA,Endocrine,Young adults,Occurs in poorly controlled diabetics,Metabolic,Acute,Polyuria; dehydration,Blood glucose; ketones,Mixed,High
+Cholelithiasis,Gallstones,Gastrointestinal,Adults,More common in females,Unknown,Variable,RUQ pain; nausea after fatty meals,Ultrasound,Surgery,Low
+Tuberculosis,TB,Infectious Disease,All ages,Common in developing countries,Infection,Chronic,Cough; night sweats,Sputum smear; CXR,Medication,Moderate
+Hypertension,High blood pressure,Cardiovascular,Adults/Elderly,Affects ~30% adults,Genetic,Chronic,Often asymptomatic; headaches,BP measurement,Mixed,Moderate
+Chronic Obstructive Pulmonary Disease,COPD,Respiratory,Adults/Elderly,Common in smokers,Inflammation,Chronic,Dyspnea; chronic cough,Spirometry,Medication,Moderate
+Gastroesophageal Reflux Disease,GERD,Gastrointestinal,Adults,Affects ~20% population,Unknown,Chronic,Heartburn; regurgitation,pH monitoring; endoscopy,Mixed,Low
+Migraine,,Neurological,Young Adults,Affects ~15% population,Unknown,Recurrent,Throbbing headache; photophobia,Clinical,Mixed,Low
+Depression,Major depressive disorder,Psychiatric,All ages,Affects ~5-10% population,Genetic,Chronic/Episodic,Low mood; anhedonia,Clinical,Medication,Moderate
+Anxiety Disorder,Generalized anxiety disorder,Psychiatric,All ages,Affects ~10% population,Unknown,Chronic,Restlessness; insomnia,Clinical,Medication,Low
+Bipolar Disorder,Manic depression,Psychiatric,Young Adults,Affects ~1-2% population,Unknown,Episodic,Mood swings; mania,Clinical,Medication,Moderate
+Peptic Ulcer Disease,PUD,Gastrointestinal,Adults,Common in NSAID users,Unknown,Chronic/Recurrent,Epigastric pain; nausea,Endoscopy,Mixed,Low
+Viral Hepatitis B,Hep B,Infectious Disease,All ages,High prevalence in Asia/Africa,Infection,Acute/Chronic,Jaundice; fatigue,HBsAg testing,Supportive care,Moderate
+Viral Hepatitis C,Hep C,Infectious Disease,Adults,Common in IVDU,Infection,Chronic,Often asymptomatic; fatigue,HCV antibody test,Medication,Moderate
+HIV/AIDS,Human immunodeficiency virus infection,Infectious Disease,Adults,Worldwide,Infection,Chronic,Weight loss; opportunistic infections,HIV antibody test,Mixed,High
+Sepsis,Septicemia,Infectious Disease,All ages,Common in ICU patients,Infection,Acute,Fever; hypotension,Blood cultures,Medication,High
+Urinary Tract Infection,UTI,Genitourinary,All ages,Common in women,Infection,Acute,Dysuria; frequency,Urinalysis; urine culture,Medication,Low
+Pyelonephritis,,Genitourinary,All ages,More common in women,Infection,Acute,Fever; flank pain,Urinalysis; urine culture,Medication,Moderate
+Nephrolithiasis,Kidney stones,Genitourinary,Adults,More common in males,Unknown,Acute/Recurrent,Flank pain; hematuria,Non-contrast CT,Supportive care,Moderate
+Chronic Kidney Disease,CKD,Genitourinary,Adults/Elderly,Common in diabetics,Unknown,Chronic,Fatigue; edema,eGFR; creatinine,Mixed,High
+Otitis Media,,ENT,Children,Common in infants & toddlers,Infection,Acute,Ear pain; fever,Otoscopy,Medication,Low
+Otitis Externa,Swimmer's ear,ENT,All ages,Common in swimmers,Infection,Acute,Ear pain; discharge,Otoscopy,Medication,Low
+Sinusitis,Rhinosinusitis,ENT,All ages,Common after URTI,Inflammation,Acute,Facial pain; nasal congestion,Clinical,Medication,Low
+Tonsillitis,Pharyngitis,ENT,Children/Young Adults,Common in winter,Infection,Acute,Sore throat; fever,Throat swab,Medication,Low
+Conjunctivitis,Pink eye,Ophthalmology,All ages,Highly contagious,Unknown,Acute,Red eye; discharge,Clinical,Medication,Low
+Glaucoma,,Ophthalmology,Adults/Elderly,Common cause of blindness,Unknown,Chronic,Peripheral vision loss,Tonometry,Medication,Moderate
+Cataract,,Ophthalmology,Elderly,Leading cause of blindness,Unknown,Chronic,Blurred vision,Slit-lamp exam,Mixed,Low
+Retinal Detachment,,Ophthalmology,Adults/Elderly,More common in myopes,Unknown,Acute,Flashes; floaters,Fundoscopy,Surgery,High
+Epilepsy,Seizure disorder,Neurological,All ages,Affects ~1% population,Unknown,Chronic/Recurrent,Seizures; confusion,EEG,Medication,Moderate
+Multiple Sclerosis,MS,Neurological,Young Adults,More common in females,Autoimmune,Chronic,Vision loss; weakness,MRI brain/spine,Mixed,Moderate
+Parkinson's Disease,,Neurological,Elderly,Affects ~1% >60y,Degeneration,Chronic,Tremor; rigidity,Clinical,Mixed,Moderate
+Alzheimer's Disease,,Neurological,Elderly,Most common dementia,Degeneration,Chronic,Memory loss; confusion,Clinical; MRI,Supportive care,High
+Meningitis,,Infectious Disease,All ages,Common in unvaccinated,Infection,Acute,Fever; neck stiffness,Lumbar puncture,Medication,High
+Encephalitis,,Infectious Disease,All ages,Often viral,Inflammation,Acute,Fever; confusion,MRI; CSF,Supportive care,High
+Herpes Zoster,Shingles,Infectious Disease,Adults/Elderly,Reactivation of varicella-zoster virus,Unknown,Acute,Painful vesicular rash,Clinical,Antivirals,Mixed
+Cellulitis,,Infectious Disease,All ages,Common after skin break,Infection,Acute,Red; warm,Clinical,Medication,Low
+Psoriasis,,Dermatology,All ages,Affects 2-3% population,Inflammation,Chronic,Scaly plaques on extensor surfaces,Clinical,Mixed,Low
+Eczema,Atopic dermatitis,Dermatology,Children,Common in atopic families,Unknown,Chronic,Itchy; dry patches,Clinical,Mixed,Low
+Acne Vulgaris,Acne,Dermatology,Teens/Young Adults,Very common,Unknown,Chronic/Recurrent,Pimples; blackheads,Clinical,Mixed,Low
+Melanoma,,Dermatology,Adults,Common in fair skin,Unknown,Chronic,Irregular pigmented lesion,Biopsy,Mixed,High
+Basal Cell Carcinoma,BCC,Dermatology,Adults,Most common skin cancer,Unknown,Chronic,Pearly papule,Biopsy,Mixed,Low
+Squamous Cell Carcinoma,SCC,Dermatology,Adults,Sun-exposed areas,Unknown,Chronic,Scaly ulcerated nodule,Biopsy,Mixed,Moderate
+Rheumatoid Arthritis,RA,Rheumatology,Adults,Affects ~1% population,Inflammation,Chronic,Symmetrical joint pain; morning stiffness,RF; anti-CCP,Mixed,Moderate
+Osteoarthritis,,Rheumatology,Elderly,Most common arthritis,Degeneration,Chronic,Joint pain worse with use,X-ray,Mixed,Low
+Gout,,Rheumatology,Adults,More common in males,Unknown,Acute/Recurrent,Painful swollen joint,Uric acid levels; joint aspiration,Mixed,Low
+Systemic Lupus Erythematosus,SLE,Rheumatology,Young Women,Autoimmune connective tissue disease,Unknown,Chronic,Malar rash; arthritis; fatigue,ANA; anti-dsDNA,Immunosuppressants,Mixed
+Anemia (Iron Deficiency),,Hematology,All ages,Common worldwide,Unknown,Chronic,Fatigue; pallor,CBC; ferritin,Mixed,Low`;
+
     const GREEN=0.8, ORANGE=0.4;
     let DATA=[];
     let BY_NAME=new Map();
