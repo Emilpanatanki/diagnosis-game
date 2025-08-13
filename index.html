@@ -3,10 +3,9 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Diagnosis Guessing Game</title>
+  <title>Guess the Diagnosis...🤔</title>
   <style>
     :root{
-      /* Light theme */
       --bg:#f7faff; --panel:#ffffff; --ink:#0b1220; --muted:#4b5565;
       --green:#15a377; --orange:#b7791f; --red:#d64545; --accent:#2563eb;
       --chip:#f3f6fb; --chip-b:#e5eaf3; --border:#e6e9f2;
@@ -18,15 +17,12 @@
     .row{display:flex; gap:12px; flex-wrap:wrap}
     .row > *{flex:1}
     label{font-size:12px; color:var(--muted); display:block; margin-bottom:6px}
-    input[type="text"], textarea, select{width:100%; background:#ffffff; color:var(--ink); border:1px solid #dce1eb; border-radius:10px; padding:10px 12px}
+    input[type="text"]{width:100%; background:#ffffff; color:var(--ink); border:1px solid #dce1eb; border-radius:10px; padding:10px 12px}
     button{background:var(--accent); color:#ffffff; border:0; border-radius:12px; padding:10px 14px; font-weight:600; cursor:pointer}
     button.ghost{background:transparent; color:var(--ink); border:1px solid var(--border)}
     button:disabled{opacity:.5; cursor:not-allowed}
-
     .chips{display:flex; flex-wrap:wrap; gap:8px}
-    /* Doubled vertical spacing for grouped variables */
     .chip{background:var(--chip); border:1px solid var(--chip-b); padding:6px 10px; border-radius:999px; font-size:12px; display:inline-block; margin:12px 10px 12px 0}
-
     table{width:100%; border-collapse:separate; border-spacing:0; margin-top:12px}
     thead th{position:sticky; top:0; background:#f4f7ff; z-index:2}
     th, td{border-bottom:1px solid var(--border); padding:10px; text-align:left; vertical-align:top; font-size:14px}
@@ -42,20 +38,46 @@
     .muted{color:var(--muted)}
     .small{font-size:12px}
     .colwrap{overflow:auto}
+    .rightShift{ margin-left: 8px }
+    .toggle-btn{ background:transparent; color:var(--ink); border:1px solid var(--border); border-radius:12px; padding:8px 12px; font-weight:600; display:inline-flex; align-items:center; gap:8px }
+    .toggle-btn:hover{ background:#f0f3fa }
+    .toggle-icon{ display:inline-block }
+    .instructions-panel{ display:none }
+    .instructions-panel.is-open{ display:block }
+    .confetti{ position:fixed; inset:0; pointer-events:none; z-index:0 }
+    .confetti .bit{ position:absolute; font-size:96px; opacity:.14; user-select:none; line-height:1; filter:saturate(115%); transform:translate(-50%,-50%) }
   </style>
 </head>
 <body>
+  <div class="confetti" id="organConfetti" aria-hidden="true"></div>
   <div class="wrap">
-    <h1>Diagnosis Guessing Game</h1>
-
+    <h1>Guess the Diagnosis...🤔</h1>
     <div class="card" style="margin-top:12px">
-      <div class="row" style="align-items:end">
-        <div style="flex:0 0 auto">
-          <button id="newRoundBtn">🎲 New Round</button>
+      <div class="row" style="align-items:center; justify-content:space-between">
+        <div style="flex:1 1 auto">
+          <button id="toggleInstructions" class="toggle-btn" aria-expanded="false" aria-controls="instructionsPanel">Show Instructions <span class="toggle-icon" aria-hidden="true">▼</span></button>
+        </div>
+      </div>
+      <div id="instructionsPanel" class="instructions-panel" hidden>
+        <div class="small muted" style="margin:12px 0 0 0">
+          <p><em>(Like Wordle, but with stethoscopes!)</em></p>
+          <p><strong>Welcome to "Guess the Diagnosis"</strong> — your daily dose of diagnostic fun! Your mission: crack the mystery diagnosis using your brain, your gut, and a little bit of luck.</p>
+          <p><strong>1️⃣ Make Your First Guess</strong><br>Think of any diagnosis that might fit the case. Type it in and click <strong>Add Diagnosis</strong>.</p>
+          <p><strong>2️⃣ Read the Color Clues</strong><br>Each column compares your guess with the hidden diagnosis:</p>
+          <ul style="margin:6px 0 0 18px; padding:0">
+            <li><em>System 🫀🫁</em>: Which organ system is affected?</li>
+            <li><em>Age 👶👩‍🦳</em>: What’s the typical patient age?</li>
+            <li><em>Epidemiology 🌍</em>: Who usually gets it?</li>
+            <li><em>(Plus other juicy medical details)</em></li>
+          </ul>
+          <p>Colors tell the story:<br>🟩 <strong>Green</strong> = Bingo! Exact or very close match.<br>🟧 <strong>Orange</strong> = You’re warm—partially similar.<br>🟥 <strong>Red</strong> = Nope—completely different.</p>
+          <p><strong>3️⃣ Refine Your Guess</strong><br>Use the color clues to adjust your thinking.<br><em>Example:</em> If the system is green but age is red, guess another diagnosis of the same system but with a different patient profile.</p>
+          <p><strong>4️⃣ Win Like a Pro</strong><br>Aim to get all columns green as fast as possible! Or keep guessing until you hit the right combo.</p>
+          <p><strong>5️⃣ Start Fresh Anytime</strong><br>Click <strong>Reset Diagnosis</strong> for a brand-new random case whenever you’re ready for the next challenge.</p>
+          <p><strong>💡 Pro Tip:</strong> The best players mix solid medical reasoning with wild guesses. Sometimes, the weird one is the winner.<br>Now scrub in, doctor—your patient awaits! 🩺</p>
         </div>
       </div>
     </div>
-
     <div class="card" style="margin-top:16px">
       <div class="row">
         <div>
@@ -63,8 +85,9 @@
           <input id="guess" list="diagnosisList" type="text" placeholder="Start typing…" />
           <datalist id="diagnosisList"></datalist>
         </div>
-        <div style="align-self:end">
-          <button id="guessBtn">Add Guess</button>
+        <div style="align-self:end; display:flex; gap:8px">
+          <button id="guessBtn" class="rightShift">Add Diagnosis</button>
+          <button id="resetBtn" class="ghost rightShift">Reset Diagnosis</button>
         </div>
       </div>
       <div class="legend" style="margin-top:10px">
@@ -91,15 +114,10 @@
         </table>
       </div>
     </div>
-
     <p class="small muted" style="margin-top:10px">Educational use only. Not medical advice.</p>
   </div>
-
-<script>
-// -----------------------------
-// Built-in dataset (CSV) — 30 major pathologies
-// -----------------------------
-const CSV_30 = `Diagnosis,Aliases,System,AgeGroup,Epidemiology,Etiology,KeyFindings,Management,TypicalCourse
+  <script>
+    const CSV_30 = `Diagnosis,Aliases,System,AgeGroup,Epidemiology,Etiology,KeyFindings,Management,TypicalCourse
 pneumonia,PNA,respiratory,child;older adult,winter;daycare,infectious-bacterial,fever;cough;crackles,supportive;antibiotics;oxygen,acute
 pneumothorax,PTX,respiratory,all ages,tall-thin-adolescent;smoker,traumatic;spontaneous,sudden dyspnea;pleuritic pain;hyperresonance,needle decompression;chest tube;oxygen,acute
 bronchiolitis,,respiratory,infant;toddler,winter;daycare,infectious-viral,wheezing;cough;fever,supportive;oxygen,acute
@@ -130,185 +148,189 @@ ischemic stroke,cerebral infarction,neurology,older adult,hypertension;atrial fi
 migraine,,neurology,adolescent;young adult;adult,female;stress trigger,idiopathic;functional,throbbing headache;photophobia;nausea,NSAIDs;triptans;antiemetics,acute
 acute bacterial sinusitis,sinusitis,ENT,child;adult,winter;after viral URI,infectious-bacterial,facial pain;purulent nasal discharge;tooth pain,antibiotics;decongestants,acute
 allergic rhinitis,hay fever,ENT,child;adolescent;adult,seasonal;atopy,autoimmune,clear rhinorrhea;itchy eyes;sneezing,antihistamines;steroids,subacute`;
-
-// -----------------------------
-// Minimal logic (random target only)
-// -----------------------------
-const GREEN=0.8, ORANGE=0.4;
-let DATA=[]; // normalized rows
-let BY_NAME=new Map(); // alias → canonical
-let TARGET=null; // current target diagnosis row
-let GUESSED=new Set();
-
-const RELATEDNESS={
-  system:{ 'ent':{'respiratory':0.6}, 'hepatobiliary':{'gastrointestinal':0.7 } },
-  etiology:{ 'infectious-bacterial':{'infectious-viral':0.8,'autoimmune':0.2}, 'infectious-viral':{'infectious-bacterial':0.8} },
-  management:{ 'antibiotics':{'antivirals':0.7,'supportive':0.3}, 'needle decompression':{'chest tube':0.9} },
-  course:{ 'acute':{'subacute':0.6,'chronic':0.2}, 'subacute':{'chronic':0.5} },
-  age:{ 'extremes of age':{'neonate (0-28d)':0.8,'older adult (65+)':0.8}, 'child':{'toddler':0.6,'adolescent':0.6}, 'adult':{'young adult (19-39)':0.6,'middle adult (40-64)':0.6} }
-};
-
-function normalizeToken(s){ return (s||'').toString().trim().toLowerCase(); }
-function splitTags(s){ return (s? s.split(';'):[]).map(t=>normalizeToken(t)).filter(Boolean); }
-
-function parseCSV(text){
-  const lines=text.trim().split('\n').filter(l=>l.trim().length>0);
-  const headers=lines[0].split(',').map(h=>h.trim());
-  return lines.slice(1).map(line=>{
-    const cells=line.split(',');
-    const obj={}; headers.forEach((h,i)=>{ obj[h]=cells[i]?cells[i].trim():''; });
-    return obj;
-  });
-}
-
-function normalizeRow(r){
-  return {
-    diagnosis: normalizeToken(r.Diagnosis||r.diagnosis),
-    aliases: splitTags(r.Aliases||r.aliases).concat([]),
-    system: normalizeToken(r.System||r.system),
-    age: splitTags(r.AgeGroup||r.agegroup||r.age),
-    epidemiology: splitTags(r.Epidemiology||r.epidemiology),
-    etiology: splitTags(r.Etiology||r.etiology),
-    findings: splitTags(r.KeyFindings||r.keyfindings||r.findings),
-    management: splitTags(r.Management||r.management),
-    course: normalizeToken(r.TypicalCourse||r.course||r.typicalcourse)
-  };
-}
-
-function loadDataset(rows){
-  DATA = rows.map(normalizeRow).filter(r=>r.diagnosis);
-  BY_NAME = new Map();
-  DATA.forEach(r=>{
-    BY_NAME.set(r.diagnosis, r.diagnosis);
-    r.aliases.forEach(a=>BY_NAME.set(a, r.diagnosis));
-  });
-  // Fill datalist for guesses
-  const dl=document.getElementById('diagnosisList');
-  dl.innerHTML = DATA.map(r=>`<option value="${escapeHtml(title(r.diagnosis))}"></option>`).join('') +
-                 DATA.flatMap(r=>r.aliases.map(a=>`<option value="${escapeHtml(title(a))}"></option>`)).join('');
-  resetGame();
-}
-
-function title(s){ return (s||'').split(' ').map(w=> w? (w[0].toUpperCase()+w.slice(1)) : '').join(' '); }
-function escapeHtml(str){ return str.replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m])); }
-
-function relScore(domain,a,b){
-  a=normalizeToken(a); b=normalizeToken(b);
-  if(!a||!b) return 0;
-  if(a===b) return 1;
-  const m=RELATEDNESS[domain]||{};
-  if(m[a]&&m[a][b]!=null) return m[a][b];
-  if(m[b]&&m[b][a]!=null) return m[b][a];
-  if(domain==='age' && (a==='all ages'||b==='all ages')) return 0.5;
-  return 0;
-}
-
-function jaccard(aSet,bSet){
-  if(aSet.length===0 && bSet.length===0) return 1;
-  const A=new Set(aSet), B=new Set(bSet);
-  let inter=0; A.forEach(x=>{ if(B.has(x)) inter++; });
-  const uni=new Set([...A,...B]).size;
-  return uni? inter/uni : 0;
-}
-
-function setRelatedness(domain,aSet,bSet){
-  if(aSet.length===0 && bSet.length===0) return 1;
-  function bestSum(X,Y){
-    if(X.length===0||Y.length===0) return 0;
-    let sum=0; X.forEach(x=>{
-      let best=0; Y.forEach(y=>{ best=Math.max(best, relScore(domain,x,y)); });
-      sum+=best;
-    });
-    return sum/ X.length;
-  }
-  const ab=bestSum(aSet,bSet), ba=bestSum(bSet,aSet);
-  return (ab+ba)/2;
-}
-
-function ageSimilarity(aSet,bSet){
-  const exact=jaccard(aSet,bSet);
-  const rel=setRelatedness('age',aSet,bSet);
-  return Math.max(exact, rel);
-}
-
-function systemSimilarity(a,b){ if(!a&&!b) return 1; if(!a||!b) return 0; if(a===b) return 1; return relScore('system',a,b); }
-function etiologySimilarity(aSet,bSet){ return Math.max(jaccard(aSet,bSet), setRelatedness('etiology',aSet,bSet)); }
-function managementSimilarity(aSet,bSet){ return Math.max(jaccard(aSet,bSet), setRelatedness('management',aSet,bSet)); }
-function courseSimilarity(a,b){ if(!a&&!b) return 1; if(!a||!b) return 0; if(a===b) return 1; return relScore('course',a,b); }
-function colorFor(score){ if(score>=0.8) return 'green'; if(score>=0.4) return 'orange'; return 'red'; }
-
-function resetGame(){
-  GUESSED = new Set();
-  document.querySelector('#table tbody').innerHTML='';
-  document.getElementById('guess').value='';
-}
-
-function pickRandom(){ if(DATA.length===0) return; TARGET = DATA[Math.floor(Math.random()*DATA.length)]; }
-
-function addGuess(input){
-  if(!TARGET){ alert('Click New Round to start.'); return; }
-  let key=normalizeToken(input); if(!key) return;
-  if(BY_NAME.has(key)) key=BY_NAME.get(key);
-  const row=DATA.find(r=>r.diagnosis===key);
-  if(!row){ alert('Not found. Try another term.'); return; }
-  if(GUESSED.has(key)) return;
-  GUESSED.add(key);
-  renderRow(row);
-}
-
-function renderRow(guess){
-  const t=TARGET;
-  const scoreSystem = systemSimilarity(guess.system, t.system);
-  const scoreAge = ageSimilarity(guess.age, t.age);
-  const scoreEpi = jaccard(guess.epidemiology, t.epidemiology);
-  const scoreEti = etiologySimilarity(guess.etiology, t.etiology);
-  const scoreFind = jaccard(guess.findings, t.findings);
-  const scoreMgmt = managementSimilarity(guess.management, t.management);
-  const scoreCourse = courseSimilarity(guess.course, t.course);
-  const mean = avg([scoreSystem,scoreAge,scoreEpi,scoreEti,scoreFind,scoreMgmt,scoreCourse]);
-
-  const tr=document.createElement('tr');
-  tr.innerHTML = `
-    <td><strong>${escapeHtml(title(guess.diagnosis))}</strong></td>
-    ${colorCell(scoreSystem, disp([guess.system]))}
-    ${colorCell(scoreAge, disp(guess.age))}
-    ${colorCell(scoreEpi, disp(guess.epidemiology))}
-    ${colorCell(scoreEti, disp(guess.etiology))}
-    ${colorCell(scoreFind, disp(guess.findings))}
-    ${colorCell(scoreMgmt, disp(guess.management))}
-    ${colorCell(scoreCourse, disp([guess.course]))}
-    <td class="score">${(mean*100).toFixed(0)}%</td>
-  `;
-  document.querySelector('#table tbody').appendChild(tr);
-
-  if([scoreSystem,scoreAge,scoreEpi,scoreEti,scoreFind,scoreMgmt,scoreCourse].every(s=>s>=0.8)){
-    setTimeout(()=>alert('🎉 Correct! You found the diagnosis.'), 50);
-  }
-}
-
-function colorCell(score, html){
-  const cls=colorFor(score);
-  const pct=(score*100).toFixed(0);
-  return `<td title="Similarity ${pct}%"><span class="cell ${cls}">${html}</span></td>`;
-}
-
-function avg(xs){ return xs.reduce((a,b)=>a+b,0)/xs.length; }
-function disp(arr){ if(!arr||arr.length===0) return '<span class="muted">—</span>'; return arr.map(x=>`<span class="chip">${escapeHtml(title(x))}</span>`).join(' '); }
-
-// Events
-const guessInput=document.getElementById('guess');
-const guessBtn=document.getElementById('guessBtn');
-function submitGuess(){ addGuess(guessInput.value); guessInput.value=''; guessInput.focus(); }
-
-guessBtn.addEventListener('click', submitGuess);
-guessInput.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); submitGuess(); }});
-
-document.getElementById('newRoundBtn').addEventListener('click', ()=>{ pickRandom(); resetGame(); });
-
-// Boot
-const rows = parseCSV(CSV_30);
-loadDataset(rows);
-pickRandom();
-</script>
+    const GREEN=0.8, ORANGE=0.4;
+    let DATA=[];
+    let BY_NAME=new Map();
+    let TARGET=null;
+    let GUESSED=new Set();
+    const RELATEDNESS={
+      system:{ 'ent':{'respiratory':0.6}, 'hepatobiliary':{'gastrointestinal':0.7 } },
+      etiology:{ 'infectious-bacterial':{'infectious-viral':0.8,'autoimmune':0.2}, 'infectious-viral':{'infectious-bacterial':0.8} },
+      management:{ 'antibiotics':{'antivirals':0.7,'supportive':0.3}, 'needle decompression':{'chest tube':0.9} },
+      course:{ 'acute':{'subacute':0.6,'chronic':0.2}, 'subacute':{'chronic':0.5} },
+      age:{ 'extremes of age':{'neonate (0-28d)':0.8,'older adult (65+)':0.8}, 'child':{'toddler':0.6,'adolescent':0.6}, 'adult':{'young adult (19-39)':0.6,'middle adult (40-64)':0.6} }
+    };
+    function normalizeToken(s){ return (s||'').toString().trim().toLowerCase(); }
+    function splitTags(s){ return (s? s.split(';'):[]).map(t=>normalizeToken(t)).filter(Boolean); }
+    function parseCSV(text){
+      const lines=text.trim().split('\n').filter(l=>l.trim().length>0);
+      const headers=lines[0].split(',').map(h=>h.trim());
+      return lines.slice(1).map(line=>{
+        const cells=line.split(',');
+        const obj={}; headers.forEach((h,i)=>{ obj[h]=cells[i]?cells[i].trim():''; });
+        return obj;
+      });
+    }
+    function normalizeRow(r){
+      return {
+        diagnosis: normalizeToken(r.Diagnosis||r.diagnosis),
+        aliases: splitTags(r.Aliases||r.aliases).concat([]),
+        system: normalizeToken(r.System||r.system),
+        age: splitTags(r.AgeGroup||r.agegroup||r.age),
+        epidemiology: splitTags(r.Epidemiology||r.epidemiology),
+        etiology: splitTags(r.Etiology||r.etiology),
+        findings: splitTags(r.KeyFindings||r.keyfindings||r.findings),
+        management: splitTags(r.Management||r.management),
+        course: normalizeToken(r.TypicalCourse||r.course||r.typicalcourse)
+      };
+    }
+    function loadDataset(rows){
+      DATA = rows.map(normalizeRow).filter(r=>r.diagnosis);
+      BY_NAME = new Map();
+      DATA.forEach(r=>{
+        BY_NAME.set(r.diagnosis, r.diagnosis);
+        r.aliases.forEach(a=>BY_NAME.set(a, r.diagnosis));
+      });
+      const dl=document.getElementById('diagnosisList');
+      dl.innerHTML = DATA.map(r=>`<option value="${escapeHtml(title(r.diagnosis))}"></option>`).join('') +
+                     DATA.flatMap(r=>r.aliases.map(a=>`<option value="${escapeHtml(title(a))}"></option>`)).join('');
+      resetGame();
+    }
+    function title(s){ return (s||'').split(' ').map(w=> w? (w[0].toUpperCase()+w.slice(1)) : '').join(' '); }
+    function escapeHtml(str){ return str.replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m])); }
+    function relScore(domain,a,b){
+      a=normalizeToken(a); b=normalizeToken(b);
+      if(!a||!b) return 0;
+      if(a===b) return 1;
+      const m=RELATEDNESS[domain]||{};
+      if(m[a]&&m[a][b]!=null) return m[a][b];
+      if(m[b]&&m[b][a]!=null) return m[b][a];
+      if(domain==='age' && (a==='all ages'||b==='all ages')) return 0.5;
+      return 0;
+    }
+    function jaccard(aSet,bSet){
+      if(aSet.length===0 && bSet.length===0) return 1;
+      const A=new Set(aSet), B=new Set(bSet);
+      let inter=0; A.forEach(x=>{ if(B.has(x)) inter++; });
+      const uni=new Set([...A,...B]).size;
+      return uni? inter/uni : 0;
+    }
+    function setRelatedness(domain,aSet,bSet){
+      if(aSet.length===0 && bSet.length===0) return 1;
+      function bestSum(X,Y){
+        if(X.length===0||Y.length===0) return 0;
+        let sum=0; X.forEach(x=>{
+          let best=0; Y.forEach(y=>{ best=Math.max(best, relScore(domain,x,y)); });
+          sum+=best;
+        });
+        return sum/ X.length;
+      }
+      const ab=bestSum(aSet,bSet), ba=bestSum(bSet,aSet);
+      return (ab+ba)/2;
+    }
+    function ageSimilarity(aSet,bSet){
+      const exact=jaccard(aSet,bSet);
+      const rel=setRelatedness('age',aSet,bSet);
+      return Math.max(exact, rel);
+    }
+    function systemSimilarity(a,b){ if(!a&&!b) return 1; if(!a||!b) return 0; if(a===b) return 1; return relScore('system',a,b); }
+    function etiologySimilarity(aSet,bSet){ return Math.max(jaccard(aSet,bSet), setRelatedness('etiology',aSet,bSet)); }
+    function managementSimilarity(aSet,bSet){ return Math.max(jaccard(aSet,bSet), setRelatedness('management',aSet,bSet)); }
+    function courseSimilarity(a,b){ if(!a&&!b) return 1; if(!a||!b) return 0; if(a===b) return 1; return relScore('course',a,b); }
+    function colorFor(score){ if(score>=0.8) return 'green'; if(score>=0.4) return 'orange'; return 'red'; }
+    function resetGame(){
+      GUESSED = new Set();
+      document.querySelector('#table tbody').innerHTML='';
+      document.getElementById('guess').value='';
+    }
+    function pickRandom(){ if(DATA.length===0) return; TARGET = DATA[Math.floor(Math.random()*DATA.length)]; }
+    function addGuess(input){
+      if(!TARGET){ alert('Click Reset Diagnosis to start.'); return; }
+      let key=normalizeToken(input); if(!key) return;
+      if(BY_NAME.has(key)) key=BY_NAME.get(key);
+      const row=DATA.find(r=>r.diagnosis===key);
+      if(!row){ alert('Not found. Try another term.'); return; }
+      if(GUESSED.has(key)) return;
+      GUESSED.add(key);
+      renderRow(row);
+    }
+    function renderRow(guess){
+      const t=TARGET;
+      const scoreSystem = systemSimilarity(guess.system, t.system);
+      const scoreAge = ageSimilarity(guess.age, t.age);
+      const scoreEpi = jaccard(guess.epidemiology, t.epidemiology);
+      const scoreEti = etiologySimilarity(guess.etiology, t.etiology);
+      const scoreFind = jaccard(guess.findings, t.findings);
+      const scoreMgmt = managementSimilarity(guess.management, t.management);
+      const scoreCourse = courseSimilarity(guess.course, t.course);
+      const mean = avg([scoreSystem,scoreAge,scoreEpi,scoreEti,scoreFind,scoreMgmt,scoreCourse]);
+      const tr=document.createElement('tr');
+      tr.innerHTML = `
+        <td><strong>${escapeHtml(title(guess.diagnosis))}</strong></td>
+        ${colorCell(scoreSystem, disp([guess.system]))}
+        ${colorCell(scoreAge, disp(guess.age))}
+        ${colorCell(scoreEpi, disp(guess.epidemiology))}
+        ${colorCell(scoreEti, disp(guess.etiology))}
+        ${colorCell(scoreFind, disp(guess.findings))}
+        ${colorCell(scoreMgmt, disp(guess.management))}
+        ${colorCell(scoreCourse, disp([guess.course]))}
+        <td class="score">${(mean*100).toFixed(0)}%</td>`;
+      document.querySelector('#table tbody').appendChild(tr);
+      if([scoreSystem,scoreAge,scoreEpi,scoreEti,scoreFind,scoreMgmt,scoreCourse].every(s=>s>=0.8)){
+        setTimeout(()=>alert('🎉 Correct! You found the diagnosis.'), 50);
+      }
+    }
+    function colorCell(score, html){
+      const cls=colorFor(score);
+      const pct=(score*100).toFixed(0);
+      return `<td title="Similarity ${pct}%"><span class="cell ${cls}">${html}</span></td>`;
+    }
+    function avg(xs){ return xs.reduce((a,b)=>a+b,0)/xs.length; }
+    function disp(arr){ if(!arr||arr.length===0) return '<span class="muted">—</span>'; return arr.map(x=>`<span class="chip">${escapeHtml(title(x))}</span>`).join(' '); }
+    const guessInput=document.getElementById('guess');
+    const guessBtn=document.getElementById('guessBtn');
+    function submitGuess(){ addGuess(guessInput.value); guessInput.value=''; guessInput.focus(); }
+    guessBtn.addEventListener('click', submitGuess);
+    guessInput.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); submitGuess(); }});
+    document.getElementById('resetBtn').addEventListener('click', ()=>{ pickRandom(); resetGame(); });
+    const toggleBtn = document.getElementById('toggleInstructions');
+    const panel = document.getElementById('instructionsPanel');
+    if (toggleBtn && panel) {
+      toggleBtn.addEventListener('click', () => {
+        const isOpen = toggleBtn.getAttribute('aria-expanded') === 'true';
+        toggleBtn.setAttribute('aria-expanded', String(!isOpen));
+        if (!isOpen) {
+          panel.hidden = false;
+          panel.classList.add('is-open');
+          toggleBtn.innerHTML = 'Hide Instructions <span class="toggle-icon" aria-hidden="true">▲</span>';
+        } else {
+          panel.classList.remove('is-open');
+          panel.hidden = true;
+          toggleBtn.innerHTML = 'Show Instructions <span class="toggle-icon" aria-hidden="true">▼</span>';
+        }
+      });
+    }
+    const rows = parseCSV(CSV_30);
+    loadDataset(rows);
+    pickRandom();
+    (function(){
+      const el = document.getElementById('organConfetti');
+      if (!el) return;
+      const icons = ['🫀','🫁','🧠','🩺','🧬'];
+      const count = 20;
+      for (let i=0; i<count; i++){
+        const span = document.createElement('span');
+        span.className = 'bit';
+        span.textContent = icons[i % icons.length];
+        const x = Math.random()*100;
+        const y = Math.random()*100;
+        const scale = 0.9 + Math.random()*0.6;
+        span.style.left = x+'vw';
+        span.style.top  = y+'vh';
+        span.style.transform = `translate(-50%,-50%) scale(${scale})`;
+        el.appendChild(span);
+      }
+    })();
+  </script>
 </body>
 </html>
