@@ -52,9 +52,28 @@
 
     <!-- Top control card: description + randomizer -->
     <div class="card" style="margin-top:12px">
-      <div class="row" style="align-items:end; justify-content:space-between">
-        <div style="flex:1 1 auto">
-          <div class="small muted" style="margin:0"><strong>How to play</strong><ul style="margin:8px 0 0 18px; padding:0 0 0 2px"><li>Type a likely diagnosis and click <strong>Add Guess</strong>.</li><li>Each new row compares your guess with a hidden diagnosis across columns (System, Age, Epidemiology, etc.).</li><li><span class="swatch g"></span><strong>Green</strong> = exact/very close · <span class="swatch o"></span><strong>Orange</strong> = partially similar · <span class="swatch r"></span><strong>Red</strong> = different.</li><li>Use the colors to refine your next guess. Aim to get <em>all columns green in one row</em>.</li><li>Autocomplete recognizes common names and aliases; duplicate guesses are ignored.</li><li>Click <strong>Guess Again</strong> anytime to start a new random case.</li></ul></div>
+  <div class="small muted" style="margin:0">
+    <p><em>(Like Wordle, but with stethoscopes!)</em></p>
+    <p><strong>Welcome to "Guess the Diagnosis"</strong> — your daily dose of diagnostic fun! Your mission: crack the mystery diagnosis using your brain, your gut, and a little bit of luck.</p>
+    <ol style="margin:8px 0 0 18px; padding:0">
+      <li><strong>Make Your First Guess</strong><br>Think of any diagnosis that might fit the case. Type it in and click <strong>Add Diagnosis</strong>.</li>
+      <li><strong>Read the Color Clues</strong><br>Each column compares your guess with the hidden diagnosis:<br>
+        <em>System 🫀🫁</em>: Which organ system is affected?<br>
+        <em>Age 👶👩‍🦳</em>: What’s the typical patient age?<br>
+        <em>Epidemiology 🌍</em>: Who usually gets it?<br>
+        <em>(Plus other juicy medical details)</em><br>
+        Colors tell the story:<br>
+        🟩 <strong>Green</strong> = Bingo! Exact or very close match.<br>
+        🟧 <strong>Orange</strong> = You’re warm—partially similar.<br>
+        🟥 <strong>Red</strong> = Nope—completely different.
+      </li>
+      <li><strong>Refine Your Guess</strong><br>Use the color clues to adjust your thinking. Example: If the system is green but age is red, guess another diagnosis of the same system but with a different patient profile.</li>
+      <li><strong>Win Like a Pro</strong><br>Aim to get all columns green as fast as possible—or keep guessing until you hit the right combo.</li>
+      <li><strong>Start Fresh Anytime</strong><br>Click <strong>Reset Diagnosis</strong> for a brand‑new random case.</li>
+    </ol>
+    <p><strong>Pro Tip:</strong> The best players mix solid medical reasoning with wild guesses. Sometimes, the weird one is the winner. Now scrub in, doctor—your patient awaits! 🩺</p>
+  </div>
+</div>
         </div>
         <div style="flex:0 0 auto">
           <button id="newRoundBtn">Guess Again</button>
@@ -70,9 +89,10 @@
           <input id="guess" list="diagnosisList" type="text" placeholder="Start typing…" />
           <datalist id="diagnosisList"></datalist>
         </div>
-        <div style="align-self:end">
-          <button id="guessBtn" class="rightShift">Add Guess</button>
-        </div>
+        <div style="align-self:end; display:flex; gap:8px">
+  <button id="guessBtn" class="rightShift">Add Diagnosis</button>
+  <button id="resetBtn" class="ghost rightShift">Reset Diagnosis</button>
+</div>
       </div>
       <div class="legend" style="margin-top:10px">
         <span><span class="swatch g"></span>Green = exact/very close</span>
@@ -253,7 +273,7 @@ function resetGame(){
 function pickRandom(){ if(DATA.length===0) return; TARGET = DATA[Math.floor(Math.random()*DATA.length)]; }
 
 function addGuess(input){
-  if(!TARGET){ alert('Click Guess Again to start.'); return; }
+  if(!TARGET){ alert('Click Reset Diagnosis to start.'); return; }
   let key=normalizeToken(input); if(!key) return;
   if(BY_NAME.has(key)) key=BY_NAME.get(key);
   const row=DATA.find(r=>r.diagnosis===key);
@@ -309,7 +329,7 @@ function submitGuess(){ addGuess(guessInput.value); guessInput.value=''; guessIn
 guessBtn.addEventListener('click', submitGuess);
 guessInput.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); submitGuess(); }});
 
-document.getElementById('newRoundBtn').addEventListener('click', ()=>{ pickRandom(); resetGame(); });
+document.getElementById('resetBtn').addEventListener('click', ()=>{ pickRandom(); resetGame(); }); resetGame(); });
 
 // Boot
 const rows = parseCSV(CSV_30);
