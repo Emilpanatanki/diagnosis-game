@@ -46,12 +46,9 @@
     .toggle-icon{ display:inline-block }
     .instructions-panel{ display:none }
     .instructions-panel.is-open{ display:block }
-    .confetti{ position:fixed; inset:0; pointer-events:none; z-index:0 }
-    .confetti .bit{ position:absolute; font-size:96px; opacity:.14; user-select:none; line-height:1; filter:saturate(115%); transform:translate(-50%,-50%) }
   </style>
 </head>
 <body>
-  <div class="confetti" id="organConfetti" aria-hidden="true"></div>
   <div class="wrap">
     <h1>Guess the Diagnosis...🤔</h1>
     <div class="card" style="margin-top:12px">
@@ -72,7 +69,7 @@
             <li><em>Epidemiology 🌍</em>: Who usually gets it?</li>
             <li><em>(Plus other juicy medical details)</em></li>
           </ul>
-          <p>Colors tell the story:<br>🟩 <strong>Green</strong> = exact or very close;<br>🟨 <strong>Yellow</strong> = close near‑miss;<br>🟧 <strong>Orange</strong> = far near‑miss;<br>🟥 <strong>Red</strong> = different.</p>
+          <p>Colors tell the story:<br>🟩 <strong>Green</strong> = exact or very close;<br>🟨 <strong>Yellow</strong> = close near-miss;<br>🟧 <strong>Orange</strong> = far near-miss;<br>🟥 <strong>Red</strong> = different.</p>
           <p><strong>3️⃣ Refine Your Guess</strong><br>Use the color clues to adjust your thinking.<br><em>Example:</em> If the system is green but age is orange, stay in the same system but shift the patient profile.</p>
           <p><strong>4️⃣ Win Like a Pro</strong><br>Aim to get all columns green as fast as possible! Or keep guessing until you hit the right combo.</p>
           <p><strong>5️⃣ Start Fresh Anytime</strong><br>Click <strong>Reset Diagnosis</strong> for a brand-new random case whenever you’re ready for the next challenge.</p>
@@ -93,8 +90,8 @@
       </div>
       <div class="legend" style="margin-top:10px">
         <span><span class="swatch g"></span>Green = exact/very close</span>
-        <span><span class="swatch y"></span>Yellow = close near‑miss</span>
-        <span><span class="swatch o"></span>Orange = far near‑miss</span>
+        <span><span class="swatch y"></span>Yellow = close near-miss</span>
+        <span><span class="swatch o"></span>Orange = far near-miss</span>
         <span><span class="swatch r"></span>Red = different</span>
       </div>
       <div class="colwrap">
@@ -118,6 +115,7 @@
     </div>
     <p class="small muted" style="margin-top:10px">Educational use only. Not medical advice.</p>
   </div>
+
   <script>
     const CSV_30 = `Diagnosis,Aliases,System,AgeGroup,Epidemiology,Etiology,Onset,KeyFindings,Investigation,Management,SeverityRisk
 Myocardial Infarction,Heart attack; MI,cardiovascular,middle adult; older adult (65+),male >50; atherosclerosis,vascular; thrombotic,acute,chest pain; dyspnea; diaphoresis,ecg; troponin,mixed,high
@@ -439,40 +437,6 @@ Anemia (Iron Deficiency),,hematology,child; young adult; middle adult; older adu
     const rows = parseCSV(CSV_30);
     loadDataset(rows);
     pickRandom();
-
-    function layoutOrgans(){
-      const el = document.getElementById('organConfetti');
-      if (!el) return;
-      el.innerHTML = '';
-      const icons = ['🫀','🫁','🧠','🩺','🧬'];
-      const count = 20;
-      const placed = [];
-      const W = window.innerWidth;
-      const H = window.innerHeight;
-      const margin = 32;
-      for(let i=0;i<count;i++){
-        let attempts=0; let ok=false; let x=0,y=0,scale=1,r=48;
-        while(attempts<200 && !ok){
-          scale = 1 + Math.random()*0.4;
-          const size = 96*scale;
-          r = size*0.5;
-          x = margin + r + Math.random()*(W - 2*(margin + r));
-          y = margin + r + Math.random()*(H - 2*(margin + r));
-          ok = placed.every(p => Math.hypot(x-p.x,y-p.y) >= (r + p.r + 12));
-          attempts++;
-        }
-        const span = document.createElement('span');
-        span.className = 'bit';
-        span.textContent = icons[i % icons.length];
-        span.style.left = x+'px';
-        span.style.top  = y+'px';
-        span.style.transform = `translate(-50%,-50%) scale(${scale})`;
-        el.appendChild(span);
-        placed.push({x,y,r});
-      }
-    }
-    layoutOrgans();
-    window.addEventListener('resize', layoutOrgans);
   </script>
 </body>
 </html>
