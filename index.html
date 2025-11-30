@@ -12,40 +12,90 @@
       --green:#15a377; --amber:#eab308; --orange:#b7791f; --red:#d64545; --accent:#2563eb;
       --chip:#f3f6fb; --chip-b:#e5eaf3; --border:#e6e9f2;
     }
-    html,body{background:var(--bg); color:var(--ink); font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif; margin:0}
+    html,body{
+      background:var(--bg);
+      color:var(--ink);
+      font-family:Inter,system-ui,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+      margin:0
+    }
     .wrap{max-width:1100px; margin:24px auto; padding:0 16px}
     h1{font-size:24px; margin:0 0 12px}
-    .card{background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:16px; box-shadow:0 6px 18px rgba(10,20,60,.05)}
+    .card{
+      background:var(--panel);
+      border:1px solid var(--border);
+      border-radius:16px;
+      padding:16px;
+      box-shadow:0 6px 18px rgba(10,20,60,.05)
+    }
     .row{display:flex; gap:12px; flex-wrap:wrap}
     .row > *{flex:1}
     label{font-size:12px; color:var(--muted); display:block; margin-bottom:6px}
-    input[type="text"]{width:100%; background:#ffffff; color:var(--ink); border:1px solid #dce1eb; border-radius:10px; padding:10px 12px}
-    button{background:var(--accent); color:#ffffff; border:0; border-radius:12px; padding:10px 14px; font-weight:600; cursor:pointer}
-    button.ghost{background:transparent; color:var(--ink); border:1px solid var(--border)}
+    input[type="text"]{
+      width:100%;
+      background:#ffffff;
+      color:var(--ink);
+      border:1px solid #dce1eb;
+      border-radius:10px;
+      padding:10px 12px
+    }
+    button{
+      background:var(--accent);
+      color:#ffffff;
+      border:0;
+      border-radius:12px;
+      padding:10px 14px;
+      font-weight:600;
+      cursor:pointer
+    }
     button:disabled{opacity:.5; cursor:not-allowed}
     .chips{display:flex; flex-wrap:wrap; gap:8px}
-    .chip{background:var(--chip); border:1px solid var(--chip-b); padding:6px 10px; border-radius:999px; font-size:12px; display:inline-block; margin:6px 8px 6px 0}
+    .chip{
+      background:var(--chip);
+      border:1px solid var(--chip-b);
+      padding:6px 10px;
+      border-radius:999px;
+      font-size:12px;
+      display:inline-block;
+      margin:6px 8px 6px 0
+    }
     .chip.green{ background:rgba(21,163,119,.14); border-color:rgba(21,163,119,.35); }
     .chip.amber{ background:rgba(234,179,8,.18); border-color:rgba(234,179,8,.45); }
     .chip.orange{ background:rgba(183,121,31,.16); border-color:rgba(183,121,31,.42); }
     .chip.red{ background:rgba(214,69,69,.16); border-color:rgba(214,69,69,.42); }
     table{width:100%; border-collapse:separate; border-spacing:0; margin-top:12px}
     thead th{position:sticky; top:0; background:#f4f7ff; z-index:2}
-    th, td{border-bottom:1px solid var(--border); padding:10px; text-align:left; vertical-align:top; font-size:14px}
+    th, td{
+      border-bottom:1px solid var(--border);
+      padding:10px;
+      text-align:left;
+      vertical-align:top;
+      font-size:14px
+    }
     tbody tr:hover{background:#f9fbff}
     .score{font-weight:700}
-    .legend{display:flex; gap:12px; align-items:center; color:var(--muted); font-size:13px; flex-wrap:wrap}
-    .swatch{width:14px; height:14px; border-radius:4px; display:inline-block; margin-right:6px}
-    .swatch.g{background:var(--green)} .swatch.y{background:var(--amber)} .swatch.o{background:var(--orange)} .swatch.r{background:var(--red)}
+    .legend{
+      display:flex;
+      gap:12px;
+      align-items:center;
+      color:var(--muted);
+      font-size:13px;
+      flex-wrap:wrap
+    }
+    .swatch{
+      width:14px;
+      height:14px;
+      border-radius:4px;
+      display:inline-block;
+      margin-right:6px
+    }
+    .swatch.g{background:var(--green)}
+    .swatch.y{background:var(--amber)}
+    .swatch.o{background:var(--orange)}
+    .swatch.r{background:var(--red)}
     .muted{color:var(--muted)}
     .small{font-size:12px}
     .colwrap{overflow:auto}
     .rightShift{ margin-left: 8px }
-    .toggle-btn{ background:transparent; color:var(--ink); border:1px solid var(--border); border-radius:12px; padding:8px 12px; font-weight:600; display:inline-flex; align-items:center; gap:8px }
-    .toggle-btn:hover{ background:#f0f3fa }
-    .toggle-icon{ display:inline-block }
-    .instructions-panel{ display:none }
-    .instructions-panel.is-open{ display:block }
 
     .progress-bar{
       margin-top:8px;
@@ -63,36 +113,45 @@
       background:var(--accent);
       transition:width .2s ease;
     }
+
+    /* Solved modal */
+    .overlay{
+      position:fixed;
+      inset:0;
+      background:rgba(15,23,42,0.45);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      z-index:50;
+    }
+    .overlay.is-open{ display:flex; }
+    .modal{
+      background:#ffffff;
+      padding:20px 24px;
+      border-radius:18px;
+      max-width:320px;
+      width:90%;
+      text-align:center;
+      box-shadow:0 18px 40px rgba(15,23,42,0.25);
+    }
+    .modal h2{
+      margin:0 0 8px;
+      font-size:18px;
+    }
+    .modal p{
+      margin:4px 0;
+      font-size:14px;
+      color:var(--muted);
+    }
+    .modal button{
+      margin-top:12px;
+      width:100%;
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
     <h1>Guess the Diagnosis...🤔</h1>
-
-    <div class="card" style="margin-top:12px">
-      <div class="row" style="align-items:center; justify-content:space-between">
-        <div style="flex:1 1 auto">
-          <button id="toggleInstructions" class="toggle-btn" aria-expanded="false" aria-controls="instructionsPanel">
-            Show Instructions <span class="toggle-icon" aria-hidden="true">▼</span>
-          </button>
-        </div>
-        <div>
-          <div id="stats" class="small muted"></div>
-        </div>
-      </div>
-      <div id="instructionsPanel" class="instructions-panel" hidden>
-        <div class="small muted" style="margin:12px 0 0 0">
-          <p><em>(Like Wordle, but for diagnoses!)</em></p>
-          <p><strong>1) Read today's case vignette.</strong> Think of the most likely diagnosis.</p>
-          <p><strong>2) Make a guess.</strong> Enter any diagnosis from the list and hit <strong>Add Diagnosis</strong>.</p>
-          <p><strong>3) Check the colors.</strong> Each column (system, age, epi, etc.) shows how close you are:<br>
-            🟩 exact &nbsp; 🟨 close &nbsp; 🟧 somewhat off &nbsp; 🟥 different
-          </p>
-          <p><strong>4) Refine.</strong> Use the colors to adjust your next guess.</p>
-          <p><strong>5) Daily case.</strong> There is one diagnosis per day. Once solved, come back tomorrow for a new case.</p>
-        </div>
-      </div>
-    </div>
 
     <!-- Daily vignette card -->
     <div id="vignetteCard" class="card" style="margin-top:16px">
@@ -147,558 +206,78 @@
     <p class="small muted" style="margin-top:10px">Educational use only. Not medical advice.</p>
   </div>
 
+  <!-- Solved popup -->
+  <div id="solvedOverlay" class="overlay" role="dialog" aria-modal="true" aria-labelledby="solvedTitle">
+    <div class="modal">
+      <h2 id="solvedTitle">🎉 Correct!</h2>
+      <p id="solvedText"></p>
+      <p class="small muted">Come back tomorrow for a new case.</p>
+      <button id="closeSolvedBtn">Close</button>
+    </div>
+  </div>
+
   <script>
   (function(){
     const CSV_30 = `Diagnosis,Aliases,System,AgeGroup,Epidemiology,Etiology,Onset,KeyFindings,Investigation,Management,SeverityRisk
-Myocardial Infarction,Heart attack; MI,cardiovascular,middle adult; older adult (65+),male >50; atherosclerosis,vascular; thrombotic,acute,chest pain; dyspnea; diaphoresis,ecg; troponin,mixed,high
-Pneumonia,Lower respiratory tract infection,respiratory,infant; older adult (65+),older adult (65+); winter; aspiration risk,infection,acute,fever; cough; dyspnea; sputum,cxr,medication,moderate
-Asthma,Bronchial asthma,respiratory,child; adolescent; young adult,atopy; triggers,inflammatory,acute; recurrent; episodic,wheeze; cough; dyspnea,spirometry,mixed,low
-Stroke,Cerebrovascular accident; CVA,neurology,middle adult; older adult (65+),hypertension; atrial fibrillation,vascular; thrombotic,acute,weakness focal; facial droop; confusion,ct; mri,mixed,high
-Appendicitis,,gastrointestinal,adolescent; young adult,obstruction fecalith,obstructive; infection,acute,rlq pain; fever; nausea vomiting,clinical; ultrasound,surgery,moderate
-Diabetic Ketoacidosis,DKA,endocrine,adolescent; young adult,poorly controlled type 1 diabetes,metabolic,acute,polyuria; polydipsia; dehydration; nausea vomiting,blood glucose; ketones; abg,iv fluids; insulin,high
-Cholelithiasis,Gallstones,gastrointestinal,young adult; middle adult,female; obesity; fatty meals,obstructive,variable,ruq pain; nausea,ultrasound,surgery,low
-Tuberculosis,TB,respiratory,young adult; middle adult,exposure; developing country,infection,chronic,cough; weight loss; night sweats; fever,sputum smear; cxr,medication,moderate
-Hypertension,High blood pressure,cardiovascular,middle adult; older adult (65+),family history; obesity,genetic; idiopathic,chronic,headache; often asymptomatic,bp measurement,mixed,moderate
-Chronic Obstructive Pulmonary Disease,COPD,respiratory,middle adult; older adult (65+),smoking,inflammatory; obstructive,chronic,dyspnea; cough; sputum,spirometry,medication,moderate
-Gastroesophageal Reflux Disease,GERD,gastrointestinal,young adult; middle adult; older adult (65+),obesity; late meals,functional,chronic,heartburn; regurgitation; chest pain,ph monitoring; endoscopy,mixed,low
-Migraine,,neurology,young adult,personal or family history,idiopathic,recurrent; episodic,headache; photophobia; nausea vomiting,clinical,mixed,low
-Depression,Major depressive disorder,psychiatry,adolescent; young adult; middle adult,prior episode; stressors,idiopathic; genetic,chronic; episodic,low mood; anhedonia; fatigue,clinical,medication,moderate
-Anxiety Disorder,Generalized anxiety disorder,psychiatry,adolescent; young adult; middle adult,stressors,idiopathic,chronic,restlessness; insomnia; fatigue,clinical,medication,low
-Bipolar Disorder,Manic depression,psychiatry,young adult,family history,idiopathic; genetic,episodic,mood swings; decreased sleep need,clinical,medication,moderate
-Peptic Ulcer Disease,PUD,gastrointestinal,young adult; middle adult; older adult (65+),nsaid use; h pylori,infection,chronic; recurrent,epigastric pain; nausea,endoscopy,mixed,low
-Viral Hepatitis B,Hep B,gastrointestinal,young adult; middle adult,unvaccinated; blood exposure,infection,acute; chronic,jaundice; fatigue; nausea,hbsag; lfts,supportive care,moderate
-Viral Hepatitis C,Hep C,gastrointestinal,young adult; middle adult; older adult (65+),ivdu; old transfusion,infection,chronic,fatigue; often asymptomatic,hcv antibody; hcv rna,medication,moderate
-HIV/AIDS,Human immunodeficiency virus infection,immunology,young adult; middle adult,unprotected sex; ivdu,infection,chronic,weight loss; fever; opportunistic infections,hiv ab/ag; hiv rna,mixed,high
-Sepsis,Septicemia,immunology,infant; older adult (65+),icu; invasive devices,infection,acute,fever; hypotension; tachycardia,blood cultures; lactate,medication; iv fluids; vasopressors,high
-Urinary Tract Infection,UTI,genitourinary,young adult; middle adult; older adult (65+),female; sexual activity,infection,acute,dysuria; frequency; suprapubic pain,urinalysis; urine culture,medication,low
-Pyelonephritis,,genitourinary,young adult; middle adult; older adult (65+),female; prior uti,infection,acute,fever; flank pain; nausea vomiting,urinalysis; urine culture,medication,moderate
-Nephrolithiasis,Kidney stones,genitourinary,young adult; middle adult,male; dehydration,metabolic; obstructive,acute; recurrent,flank pain; hematuria,ct,supportive care,moderate
-Chronic Kidney Disease,CKD,genitourinary,middle adult; older adult (65+),diabetes; hypertension,metabolic,chronic,fatigue; edema; pruritus,egfr; creatinine; urine acr,mixed,high
-Otitis Media,,ent,infant; child,daycare; winter,infection,acute,ear pain; fever; irritability,otoscopy,medication,low
-Otitis Externa,Swimmer's ear,ent,child; adolescent; young adult,swimming; qtip trauma,infection,acute,ear pain; discharge,otoscopy,medication,low
-Sinusitis,Rhinosinusitis,ent,child; young adult; middle adult,after urti; allergy,infection,acute,facial pain; nasal congestion; headache,clinical,medication,low
-Tonsillitis,Pharyngitis,ent,child; adolescent; young adult,winter; exposure,infection,acute,sore throat; fever; dysphagia,throat swab,medication,low
-Conjunctivitis,Pink eye,ophthalmology,child; young adult; middle adult,contact; contagious,infection,acute,red eye; eye discharge,clinical,medication,low
-Glaucoma,,ophthalmology,middle adult; older adult (65+),elevated iop risk; family history,degenerative,chronic,peripheral vision loss; headache,tonometry,medication,moderate
-Cataract,,ophthalmology,older adult (65+),age,degenerative,chronic,blurred vision; glare,slit-lamp exam,mixed,low
-Retinal Detachment,,ophthalmology,middle adult; older adult (65+),myopia; trauma,degenerative,acute,flashes; floaters; peripheral vision loss,fundoscopy,surgery,high
-Epilepsy,Seizure disorder,neurology,child; adolescent; young adult; middle adult,idiopathic or secondary,idiopathic,chronic; recurrent,seizure; postictal confusion,eeg,medication,moderate
-Multiple Sclerosis,MS,neurology,young adult,female; temperate climate,autoimmune,chronic,vision blur; focal weakness; numbness,mri; csf,mixed,moderate
-Parkinson's Disease,,neurology,older adult (65+),age; male,degenerative,chronic,tremor; rigidity; bradykinesia,clinical,mixed,moderate
-Alzheimer's Disease,,neurology,older adult (65+),age; family history,degenerative,chronic,memory loss; confusion,clinical; neuropsych,supportive care,high
-Meningitis,,neurology,infant; child; older adult (65+),unvaccinated; crowding,infection,acute,fever; neck stiffness; headache,lp,medication,high
-Encephalitis,,neurology,child; young adult; older adult (65+),viral exposure,infection; inflammatory,acute,fever; confusion; seizure,mri; csf,supportive care,high
-Herpes Zoster,Shingles,dermatology,middle adult; older adult (65+),prior varicella,infection,acute,vesicular rash; dermatomal pain,clinical,antivirals,mixed
-Cellulitis,,dermatology,young adult; middle adult; older adult (65+),skin break; edema,infection,acute,fever; erythema; warmth,clinical,medication,low
-Psoriasis,,dermatology,adolescent; young adult; middle adult,family history,inflammatory,chronic,scaly plaques; pruritus,clinical,mixed,low
-Eczema,Atopic dermatitis,dermatology,infant; child,atopy,inflammatory,chronic,pruritus; dry patches,clinical,mixed,low
-Acne Vulgaris,Acne,dermatology,adolescent; young adult,sebaceous; hormones,inflammatory,chronic; recurrent,papules; pustules; comedones,clinical,mixed,low
-Melanoma,,dermatology,young adult; middle adult; older adult (65+),fair skin; sunburn history,neoplastic,chronic,irregular lesion; color change,biopsy,mixed,high
-Basal Cell Carcinoma,BCC,dermatology,middle adult; older adult (65+),sun exposure,neoplastic,chronic,pearly papule; ulcer,biopsy,mixed,low
-Squamous Cell Carcinoma,SCC,dermatology,middle adult; older adult (65+),sun exposure; immunosuppression,neoplastic,chronic,ulcerated nodule; scale,biopsy,mixed,moderate
-Rheumatoid Arthritis,RA,rheumatology,young adult; middle adult,female; autoimmune,autoimmune,chronic,arthralgia; joint swelling; morning stiffness,rf; anti-ccp; esr/crp,mixed,moderate
-Osteoarthritis,,rheumatology,older adult (65+),age; overuse,degenerative,chronic,arthralgia; worse with use; brief stiffness,x-ray,mixed,low
-Gout,,rheumatology,young adult; middle adult,male; hyperuricemia; alcohol,metabolic,acute; recurrent,joint swelling; severe pain (1st mtp),uric acid; joint aspiration,mixed,low
-Systemic Lupus Erythematosus,SLE,rheumatology,young adult; middle adult,female; autoimmune,autoimmune,chronic,malar rash; arthralgia; fatigue,ana; anti-dsdna,immunosuppressants,mixed
-Anemia (Iron Deficiency),,hematology,child; young adult; middle adult; older adult (65+),low iron intake; blood loss,deficiency,chronic,fatigue; pallor; dyspnea on exertion,cbc; ferritin,mixed,low`;
+Myocardial Infarction,Heart attack; MI,cardiovascular,older adult (65+),older male; smoker; atherosclerosis; diabetes,vascular; thrombotic,acute,chest pain; dyspnea; diaphoresis,ecg; troponin,antiplatelets; anticoagulation; reperfusion therapy,high
+Pneumonia,Lower respiratory tract infection,respiratory,older adult (65+),older adult; winter season; aspiration risk,infection,acute,fever; cough; dyspnea; sputum,cxr,antibiotics; supportive care,moderate
+Asthma,Bronchial asthma,respiratory,child,child; atopy; family history,inflammatory,acute; recurrent; episodic,wheeze; cough; dyspnea,spirometry,bronchodilators; inhaled steroids,low
+Stroke,Cerebrovascular accident; CVA,neurology,older adult (65+),older adult; hypertension; atrial fibrillation,vascular; thrombotic,acute,weakness focal; facial droop; confusion,ct; mri,reperfusion therapy; antiplatelets; anticoagulation,high
+Appendicitis,,gastrointestinal,young adult,young adult; appendiceal obstruction,obstructive; infection,acute,rlq pain; fever; nausea vomiting,clinical; ultrasound,surgery (appendectomy),moderate
+Diabetic Ketoacidosis,DKA,endocrine,adolescent,type 1 diabetes; insulin omission; infection,metabolic,acute,polyuria; polydipsia; dehydration; nausea vomiting,blood glucose; ketones; abg,iv fluids; insulin; electrolyte replacement,high
+Cholelithiasis,Gallstones,gastrointestinal,middle adult,female; obesity; fatty meals; pregnancy,obstructive,variable,ruq pain; nausea,ultrasound,analgesia; elective cholecystectomy,low
+Tuberculosis,TB,respiratory,young adult,close contact; high-prevalence setting,infection,chronic,cough; weight loss; night sweats; fever,sputum smear; cxr,antituberculous therapy,moderate
+Hypertension,High blood pressure,cardiovascular,middle adult,family history; obesity; high salt intake,genetic; idiopathic,chronic,headache; often asymptomatic,bp measurement,lifestyle changes; antihypertensive drugs,moderate
+Chronic Obstructive Pulmonary Disease,COPD,respiratory,older adult (65+),chronic smoker; occupational exposure,inflammatory; obstructive,chronic,dyspnea; cough; sputum,spirometry,bronchodilators; inhaled steroids; smoking cessation,moderate
+Gastroesophageal Reflux Disease,GERD,gastrointestinal,middle adult,obesity; late meals; hiatal hernia,functional,chronic,heartburn; regurgitation; chest pain,ph monitoring; endoscopy,ppi therapy; lifestyle changes,low
+Migraine,,neurology,young adult,female; family history,idiopathic,recurrent; episodic,headache; photophobia; nausea vomiting,clinical,analgesics; migraine prophylaxis,low
+Depression,Major depressive disorder,psychiatry,young adult,prior episode; psychosocial stressors,idiopathic; genetic,chronic; episodic,low mood; anhedonia; fatigue,clinical,antidepressants; psychotherapy,moderate
+Anxiety Disorder,Generalized anxiety disorder,psychiatry,young adult,stressful life events; chronic worry,idiopathic,chronic,restlessness; insomnia; fatigue,clinical,anxiolytics; psychotherapy,low
+Bipolar Disorder,Manic depression,psychiatry,young adult,family history; mood episodes,idiopathic; genetic,episodic,mood swings; decreased sleep need,clinical,mood stabilizers; antipsychotics,moderate
+Peptic Ulcer Disease,PUD,gastrointestinal,middle adult,nsaid use; h pylori infection,infection,chronic; recurrent,epigastric pain; nausea,endoscopy,ppi therapy; h pylori eradication,low
+Viral Hepatitis B,Hep B,gastrointestinal,young adult,unvaccinated; blood or sexual exposure,infection,acute; chronic,jaundice; fatigue; nausea,hbsag; lfts,antiviral therapy; supportive care,moderate
+Viral Hepatitis C,Hep C,gastrointestinal,middle adult,iv drug use; past transfusion,infection,chronic,fatigue; often asymptomatic,hcv antibody; hcv rna,direct-acting antivirals,moderate
+HIV/AIDS,Human immunodeficiency virus infection,immunology,young adult,unprotected sex; iv drug use,infection,chronic,weight loss; fever; opportunistic infections,hiv ab/ag; hiv rna,antiretroviral therapy; prophylaxis for opportunistic infections,high
+Sepsis,Septicemia,immunology,older adult (65+),hospitalized patient; invasive devices,infection,acute,fever; hypotension; tachycardia,blood cultures; lactate,iv antibiotics; iv fluids; vasopressors,high
+Urinary Tract Infection,UTI,genitourinary,young adult,sexually active female; prior uti,infection,acute,dysuria; frequency; suprapubic pain,urinalysis; urine culture,oral antibiotics; analgesia,low
+Pyelonephritis,,genitourinary,young adult,female; ascending urinary infection,infection,acute,fever; flank pain; nausea vomiting,urinalysis; urine culture,iv or oral antibiotics; fluids,moderate
+Nephrolithiasis,Kidney stones,genitourinary,young adult,dehydration; prior stones,metabolic; obstructive,acute; recurrent,flank pain; hematuria,ct,analgesia; hydration; stone removal if needed,moderate
+Chronic Kidney Disease,CKD,genitourinary,older adult (65+),long-standing diabetes; long-standing hypertension,metabolic,chronic,fatigue; edema; pruritus,egfr; creatinine; urine acr,bp control; dialysis; nephroprotective drugs,high
+Otitis Media,,ent,infant,daycare; recent upper respiratory infection,infection,acute,ear pain; fever; irritability,otoscopy,analgesia; antibiotics when indicated,low
+Otitis Externa,Swimmer's ear,ent,adolescent,swimmer; local trauma,infection,acute,ear pain; discharge,otoscopy,topical antibiotics; ear drops,low
+Sinusitis,Rhinosinusitis,ent,young adult,after upper respiratory infection; allergic rhinitis,infection,acute,facial pain; nasal congestion; headache,clinical,intranasal steroids; decongestants; ±antibiotics,low
+Tonsillitis,Pharyngitis,ent,adolescent,winter; close contact,infection,acute,sore throat; fever; dysphagia,throat swab,analgesia; antibiotics when bacterial,low
+Conjunctivitis,Pink eye,ophthalmology,young adult,contact with infected person; viral or bacterial,infection,acute,red eye; eye discharge,clinical,topical antibiotics or supportive care,low
+Glaucoma,,ophthalmology,older adult (65+),elevated intraocular pressure; family history,degenerative,chronic,peripheral vision loss; headache,tonometry,pressure-lowering eye drops; surgery when needed,moderate
+Cataract,,ophthalmology,older adult (65+),age-related lens changes,degenerative,chronic,blurred vision; glare,slit-lamp exam,cataract surgery,low
+Retinal Detachment,,ophthalmology,middle adult,myopia; eye trauma; prior ocular surgery,degenerative,acute,flashes; floaters; peripheral vision loss,fundoscopy,urgent retinal surgery,high
+Epilepsy,Seizure disorder,neurology,young adult,idiopathic; prior brain injury,idiopathic,chronic; recurrent,seizure; postictal confusion,eeg,antiepileptic drugs,moderate
+Multiple Sclerosis,MS,neurology,young adult,young woman; temperate climate,autoimmune,chronic,vision blur; focal weakness; numbness,mri; csf,disease-modifying therapy; relapse steroids,moderate
+Parkinson's Disease,,neurology,older adult (65+),older male; idiopathic,degenerative,chronic,tremor; rigidity; bradykinesia,clinical,dopaminergic therapy; supportive care,moderate
+Alzheimer's Disease,,neurology,older adult (65+),advanced age; family history,degenerative,chronic,memory loss; confusion,clinical; neuropsych,cognitive enhancers; supportive care,high
+Meningitis,,neurology,child,unvaccinated; close living conditions,infection,acute,fever; neck stiffness; headache,lp,iv antibiotics; supportive care,high
+Encephalitis,,neurology,young adult,viral infection; seasonal exposure,infection; inflammatory,acute,fever; confusion; seizure,mri; csf,antivirals when indicated; supportive care,high
+Herpes Zoster,Shingles,dermatology,older adult (65+),reactivation of varicella; older age,infection,acute,vesicular rash; dermatomal pain,clinical,antivirals; analgesia,mixed
+Cellulitis,,dermatology,middle adult,skin break; chronic edema,infection,acute,fever; erythema; warmth,clinical,systemic antibiotics; limb elevation,low
+Psoriasis,,dermatology,young adult,family history; chronic inflammatory skin disease,inflammatory,chronic,scaly plaques; pruritus,clinical,topical steroids; immunomodulators,low
+Eczema,Atopic dermatitis,dermatology,infant,atopy; family history,inflammatory,chronic,pruritus; dry patches,clinical,emollients; topical steroids,low
+Acne Vulgaris,Acne,dermatology,adolescent,puberty; increased sebum,inflammatory,chronic; recurrent,papules; pustules; comedones,clinical,topical retinoids; antibiotics; skin hygiene,low
+Melanoma,,dermatology,middle adult,fair skin; intense sun exposure,neoplastic,chronic,irregular lesion; color change,biopsy,surgical excision; oncology referral,high
+Basal Cell Carcinoma,BCC,dermatology,older adult (65+),chronic sun exposure,neoplastic,chronic,pearly papule; ulcer,biopsy,local excision; destructive therapy,low
+Squamous Cell Carcinoma,SCC,dermatology,older adult (65+),sun exposure; immunosuppression,neoplastic,chronic,ulcerated nodule; scale,biopsy,surgical excision; radiotherapy when needed,moderate
+Rheumatoid Arthritis,RA,rheumatology,middle adult,young to middle-aged woman; autoimmune,autoimmune,chronic,arthralgia; joint swelling; morning stiffness,rf; anti-ccp; esr/crp,dmards; nsaids; steroids,moderate
+Osteoarthritis,,rheumatology,older adult (65+),age; joint overuse; obesity,degenerative,chronic,arthralgia; worse with use; brief stiffness,x-ray,analgesia; physiotherapy; joint replacement,low
+Gout,,rheumatology,middle adult,middle-aged man; hyperuricemia; alcohol,metabolic,acute; recurrent,joint swelling; severe pain (1st mtp),uric acid; joint aspiration,nsaids; colchicine; urate-lowering therapy,low
+Systemic Lupus Erythematosus,SLE,rheumatology,young adult,young woman; autoimmune; multi-system,autoimmune,chronic,malar rash; arthralgia; fatigue,ana; anti-dsdna,immunosuppressants; steroids,mixed
+Anemia (Iron Deficiency),,hematology,young adult,menorrhagia; low dietary iron; chronic blood loss,deficiency,chronic,fatigue; pallor; dyspnea on exertion,cbc; ferritin,oral iron; treat underlying cause,low`;
 
-    // Abstract vignettes mapped by canonical diagnosis (normalized)
+    // Abstract strict vignettes
     const VIGNETTES = {
-      'myocardial infarction': 'A 60-year-old male develops chest discomfort.',
-      'pneumonia': 'A 72-year-old female develops fever and cough.',
-      'asthma': 'A 16-year-old male experiences episodes of difficulty breathing.',
-      'stroke': 'A 71-year-old female suddenly develops unilateral weakness.',
-      'appendicitis': 'A 21-year-old male reports worsening abdominal discomfort.',
-      'diabetic ketoacidosis': 'A 19-year-old female with known diabetes feels increasingly unwell.',
-      'cholelithiasis': 'A 42-year-old female experiences intermittent upper abdominal discomfort.',
-      'tuberculosis': 'A 28-year-old female reports a long-standing cough.',
-      'hypertension': 'A 55-year-old female is found to have elevated blood pressure during a routine visit.',
-      'chronic obstructive pulmonary disease': 'A 67-year-old male reports gradually worsening breathlessness.',
-      'gastroesophageal reflux disease': 'A 35-year-old male experiences burning chest discomfort after meals.',
-      'migraine': 'A 25-year-old male experiences recurrent headaches.',
-      'depression': 'A 31-year-old female reports low mood and reduced interest in activities.',
-      'anxiety disorder': 'A 23-year-old male reports persistent worry and restlessness.',
-      'bipolar disorder': 'A 26-year-old male reports periods of elevated energy alternating with low mood.',
-      'peptic ulcer disease': 'A 48-year-old female has recurring upper abdominal pain.',
-      'viral hepatitis b': 'A 32-year-old male reports increasing fatigue.',
-      'viral hepatitis c': 'A 58-year-old female reports chronic tiredness.',
-      'hiv/aids': 'A 33-year-old male reports unintentional weight loss.',
-      'sepsis': 'An 80-year-old female becomes acutely unwell with fever.',
-      'urinary tract infection': 'A 26-year-old female develops burning discomfort when urinating.',
-      'pyelonephritis': 'A 40-year-old female develops fever and flank discomfort.',
-      'nephrolithiasis': 'A 34-year-old male experiences sudden severe flank pain.',
-      'chronic kidney disease': 'A 70-year-old male reports fatigue and ankle swelling.',
-      'otitis media': 'A 3-year-old male becomes febrile and irritable.',
-      'otitis externa': 'A 14-year-old female develops ear pain after swimming.',
-      'sinusitis': 'A 29-year-old male has persistent nasal congestion and facial pressure.',
-      'tonsillitis': 'A 17-year-old female develops sore throat and fever.',
-      'conjunctivitis': 'A 22-year-old female notices redness and irritation in one eye.',
-      'glaucoma': 'A 68-year-old male reports gradually changing vision.',
-      'cataract': 'A 74-year-old female reports slowly worsening vision.',
-      'retinal detachment': 'A 56-year-old male notices sudden visual disturbance.',
-      'epilepsy': 'A 20-year-old female experiences repeated episodes of altered awareness.',
-      'multiple sclerosis': 'A 27-year-old female experiences intermittent neurological symptoms.',
-      "parkinson's disease": 'A 73-year-old male develops gradually worsening movement difficulties.',
-      "alzheimer's disease": 'A 79-year-old female develops progressive memory problems.',
-      'meningitis': 'A 6-year-old male develops fever and headache.',
-      'encephalitis': 'A 19-year-old female develops fever and confusion.',
-      'herpes zoster': 'A 64-year-old female develops localized skin discomfort.',
-      'cellulitis': 'A 52-year-old male develops redness and warmth in part of the skin.',
-      'psoriasis': 'A 30-year-old male develops recurrent scaly skin patches.',
-      'eczema': 'A 5-year-old female develops itchy dry skin patches.',
-      'acne vulgaris': 'A 16-year-old female develops facial skin bumps.',
-      'melanoma': 'A 45-year-old male notices a changing skin lesion.',
-      'basal cell carcinoma': 'A 62-year-old female notices a slowly enlarging skin spot.',
-      'squamous cell carcinoma': 'A 70-year-old male notices a persistent rough skin lesion.',
-      'rheumatoid arthritis': 'A 38-year-old female reports joint pain and morning stiffness.',
-      'osteoarthritis': 'A 68-year-old female reports joint discomfort that worsens with activity.',
-      'gout': 'A 47-year-old male develops sudden pain in one joint.',
-      'systemic lupus erythematosus': 'A 29-year-old female develops intermittent joint pain and fatigue.',
-      'anemia (iron deficiency)': 'A 24-year-old female reports persistent tiredness.'
-    };
-
-    const RELATEDNESS={
-      system:{ 'ent':{'respiratory':0.6} },
-      etiology:{ 'infection':{'inflammatory':0.5,'autoimmune':0.25}, 'autoimmune':{'inflammatory':0.6}, 'vascular':{'thrombotic':0.7}, 'unknown':{} },
-      management:{ 'medication':{'mixed':0.7,'supportive care':0.4}, 'surgery':{'mixed':0.6}, 'antivirals':{'medication':0.5} },
-      course:{ 'acute':{'subacute':0.6,'episodic':0.5}, 'chronic':{'recurrent':0.55,'variable':0.4} },
-      age:{}
-    };
-
-    const AGE_ORDER = [
-      'neonate (0-28d)','infant','toddler','child','adolescent','young adult','middle adult','older adult (65+)'
-    ];
-    const AGE_ALIASES = {
-      'children':['child'],
-      'young adults':['young adult'],
-      'adults':['young adult','middle adult','older adult (65+)'],
-      'elderly':['older adult (65+)'],
-      'adults/elderly':['middle adult','older adult (65+)'],
-      'children/young adults':['child','adolescent','young adult']
-    };
-    const AGE_INDEX = new Map(AGE_ORDER.map((v,i)=>[v,i]));
-
-    let DATA=[];
-    let BY_NAME=new Map();
-    let TARGET=null;
-    let GUESSED=new Set();
-    let bestScoreSoFar=0;
-    let guessesToday=0;
-
-    const STATS_KEY = 'dxStats';
-    let stats = {
-      casesPlayed: 0,
-      totalGuesses: 0,
-      bestGuesses: null,
-      streak: 0,
-      lastSolvedDate: null
-    };
-
-    // ---------- Utility / parsing ----------
-
-    function normalizeToken(s){ return (s||'').toString().trim().toLowerCase(); }
-
-    function splitTags(s){
-      if(!s) return [];
-      const normalized = s.replace(/[,/|]/g,';').replace(/\s*;\s*/g,';').toLowerCase();
-      return normalized.split(';').map(t=>t.trim()).filter(Boolean);
-    }
-
-    function parseCSV(text){
-      const lines = text.replace(/\r/g,'').split('\n').filter(l=>l.trim().length>0);
-      if(lines.length===0) return [];
-      function parseLine(line){
-        const cells=[]; let cur=''; let inQ=false;
-        for(let i=0;i<line.length;i++){
-          const ch=line[i];
-          if(inQ){
-            if(ch==='"' && line[i+1]==='"'){ cur+='"'; i++; }
-            else if(ch==='"'){ inQ=false; }
-            else { cur+=ch; }
-          }else{
-            if(ch===','){ cells.push(cur.trim()); cur=''; }
-            else if(ch==='"'){ inQ=true; }
-            else { cur+=ch; }
-          }
-        }
-        cells.push(cur.trim());
-        return cells;
-      }
-      const headers = parseLine(lines[0]).map(h=>h.trim());
-      return lines.slice(1).map(line=>{
-        const cells = parseLine(line);
-        const obj={}; headers.forEach((h,i)=>{ obj[h]=cells[i]?cells[i].trim():''; });
-        return obj;
-      });
-    }
-
-    function expandAgeTokens(tokens){
-      const out=[]; const seen=new Set();
-      tokens.forEach(t=>{
-        const mapped = AGE_ALIASES[t] || [t];
-        mapped.forEach(x=>{ if(!seen.has(x)){ seen.add(x); out.push(x); } });
-      });
-      return out;
-    }
-
-    function ageTokenSim(a,b){
-      if(a===b) return 1;
-      const ia = AGE_INDEX.has(a)?AGE_INDEX.get(a):null;
-      const ib = AGE_INDEX.has(b)?AGE_INDEX.get(b):null;
-      if(ia==null||ib==null) return 0;
-      const d=Math.abs(ia-ib);
-      if(d===1) return 0.75;
-      if(d===2) return 0.55;
-      return 0.25;
-    }
-
-    function relScore(domain,a,b){
-      a=normalizeToken(a); b=normalizeToken(b);
-      if(!a||!b) return 0;
-      if(a===b) return 1;
-      const m=RELATEDNESS[domain]||{};
-      if(m[a]&&m[a][b]!=null) return m[a][b];
-      if(m[b]&&m[b][a]!=null) return m[b][a];
-      if(domain==='age' && (a==='all ages'||b==='all ages')) return 0.5;
-      return 0;
-    }
-
-    function jaccard(aSet,bSet){
-      if(aSet.length===0 && bSet.length===0) return 1;
-      const A=new Set(aSet), B=new Set(bSet);
-      let inter=0; A.forEach(x=>{ if(B.has(x)) inter++; });
-      const uni=new Set([...A,...B]).size;
-      return uni? inter/uni : 0;
-    }
-
-    function setRelatedness(domain,aSet,bSet){
-      if(aSet.length===0 && bSet.length===0) return 1;
-      function bestSum(X,Y){
-        if(X.length===0||Y.length===0) return 0;
-        let sum=0; X.forEach(x=>{
-          let best=0; Y.forEach(y=>{ best=Math.max(best, relScore(domain,x,y)); });
-          sum+=best;
-        });
-        return sum/ X.length;
-      }
-      const ab=bestSum(aSet,bSet), ba=bestSum(bSet,aSet);
-      return (ab+ba)/2;
-    }
-
-    function ageSimilarity(aSet,bSet){
-      const g=expandAgeTokens(aSet), t=expandAgeTokens(bSet);
-      if(g.length===0 && t.length===0) return 1;
-      if(g.length===0 || t.length===0) return 0;
-      function avgBest(X,Y){ let s=0; X.forEach(x=>{ let best=0; Y.forEach(y=>{ best=Math.max(best, ageTokenSim(x,y)); }); s+=best; }); return s/X.length; }
-      return (avgBest(g,t)+avgBest(t,g))/2;
-    }
-
-    function systemSimilarity(a,b){ if(!a&&!b) return 1; if(!a||!b) return 0; if(a===b) return 1; return relScore('system',a,b); }
-    function etiologySimilarity(aSet,bSet){ return Math.max(jaccard(aSet,bSet), setRelatedness('etiology',aSet,bSet)); }
-    function managementSimilarity(aSet,bSet){ return Math.max(jaccard(aSet,bSet), setRelatedness('management',aSet,bSet)); }
-    function courseSimilarity(a,b){ if(!a&&!b) return 1; if(!a||!b) return 0; if(a===b) return 1; return relScore('course',a,b); }
-
-    function clsForScore(score){
-      if(score>=0.8) return 'green';
-      if(score>=0.65) return 'amber';
-      if(score>=0.45) return 'orange';
-      return 'red';
-    }
-
-    function maxSimAgainst(token, targetTokens, domain){
-      if(domain==='age'){
-        const g = expandAgeTokens([token]);
-        const t = expandAgeTokens(targetTokens);
-        let best=0; g.forEach(ga=>{ t.forEach(tb=>{ best=Math.max(best, ageTokenSim(ga,tb)); }); });
-        return best;
-      }
-      let best=0; targetTokens.forEach(tb=>{
-        if(token===tb) best=Math.max(best,1);
-        else{
-          const m=RELATEDNESS[domain]||{};
-          if(m[token]&&m[token][tb]!=null) best=Math.max(best,m[token][tb]);
-          if(m[tb]&&m[tb][token]!=null) best=Math.max(best,m[tb][token]);
-        }
-      });
-      return best;
-    }
-
-    function renderTokenChips(domain, guessTokens, targetTokens){
-      const g = (domain==='age') ? expandAgeTokens(guessTokens) : guessTokens;
-      const t = (domain==='age') ? expandAgeTokens(targetTokens) : targetTokens;
-      const parts=[];
-      g.forEach(tok=>{
-        const s = maxSimAgainst(tok, t, domain);
-        const cls = clsForScore(s);
-        parts.push(`<span class="chip ${cls}" title="Similarity: ${(s*100).toFixed(0)}%"> ${escapeHtml(title(tok))}</span>`);
-      });
-      if(parts.length===0) return '<span class="muted">—</span>';
-      return parts.join(' ');
-    }
-
-    function normalizeRow(r){
-      return {
-        diagnosis: normalizeToken(r.Diagnosis||r.diagnosis),
-        aliases: splitTags(r.Aliases||r.aliases),
-        system: normalizeToken(r.System||r.system),
-        age: splitTags(r.AgeGroup||r.agegroup||r.age),
-        epidemiology: splitTags(r.Epidemiology||r.epidemiology),
-        etiology: splitTags(r.Etiology||r.etiology),
-        findings: splitTags(r.KeyFindings||r.keyfindings||r.findings),
-        management: splitTags(r.Management||r.management),
-        course: normalizeToken(r.Onset||r.onset||r.TypicalCourse||r.course||r.typicalcourse)
-      };
-    }
-
-    function loadDataset(rows){
-      DATA = rows.map(normalizeRow).filter(r=>r.diagnosis);
-      BY_NAME = new Map();
-      DATA.forEach(r=>{
-        BY_NAME.set(r.diagnosis, r);
-        r.aliases.forEach(a=>BY_NAME.set(a, r));
-      });
-      const dl=document.getElementById('diagnosisList');
-      dl.innerHTML = DATA.map(r=>`<option value="${escapeHtml(title(r.diagnosis))}"></option>`).join('') +
-                     DATA.flatMap(r=>r.aliases.map(a=>`<option value="${escapeHtml(title(a))}"></option>`)).join('');
-    }
-
-    function title(s){ return (s||'').split(' ').map(w=> w? (w[0].toUpperCase()+w.slice(1)) : '').join(' '); }
-
-    function escapeHtml(str){
-      return (str||'').replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
-    }
-
-    // ---------- Game state helpers ----------
-
-    function showStatus(msg){
-      const el = document.getElementById('statusMsg');
-      if(el) el.textContent = msg || '';
-    }
-
-    function updateProgress(score){
-      const bar = document.getElementById('progressInner');
-      if(!bar) return;
-      const pct = Math.round(score*100);
-      bar.style.width = pct + '%';
-      bar.setAttribute('aria-valuenow', String(pct));
-    }
-
-    function displayVignette(dx){
-      const vDiv = document.getElementById('vignetteText');
-      if(!vDiv) return;
-      const vign = VIGNETTES[dx.diagnosis] || 'A patient presents with nonspecific symptoms.';
-      vDiv.textContent = vign;
-    }
-
-    function avg(xs){ return xs.reduce((a,b)=>a+b,0)/xs.length; }
-
-    // ---------- Stats (localStorage) ----------
-
-    function loadStats(){
-      try{
-        const raw = localStorage.getItem(STATS_KEY);
-        if(raw){
-          const obj = JSON.parse(raw);
-          stats = Object.assign(stats, obj);
-        }
-      }catch(e){}
-      updateStatsUI();
-    }
-
-    function saveStats(){
-      try{
-        localStorage.setItem(STATS_KEY, JSON.stringify(stats));
-      }catch(e){}
-    }
-
-    function updateStatsUI(){
-      const el = document.getElementById('stats');
-      if(!el) return;
-      const avgGuesses = stats.casesPlayed>0 ? (stats.totalGuesses / stats.casesPlayed).toFixed(1) : '-';
-      const best = stats.bestGuesses != null ? stats.bestGuesses : '-';
-      const streak = stats.streak || 0;
-      el.textContent = `Cases solved: ${stats.casesPlayed} | Avg guesses: ${avgGuesses} | Best: ${best} | Streak: ${streak}`;
-    }
-
-    function getTodayStr(){
-      return new Date().toISOString().slice(0,10);
-    }
-
-    function getYesterdayStr(){
-      const d = new Date();
-      d.setDate(d.getDate()-1);
-      return d.toISOString().slice(0,10);
-    }
-
-    function updateStatsOnSolve(){
-      const today = getTodayStr();
-      if(stats.lastSolvedDate === today){
-        // Already counted today
-        return;
-      }
-      stats.casesPlayed += 1;
-      stats.totalGuesses += guessesToday;
-      if(stats.bestGuesses == null || guessesToday < stats.bestGuesses){
-        stats.bestGuesses = guessesToday;
-      }
-      const yesterday = getYesterdayStr();
-      if(stats.lastSolvedDate === yesterday){
-        stats.streak = (stats.streak || 0) + 1;
-      }else{
-        stats.streak = 1;
-      }
-      stats.lastSolvedDate = today;
-      saveStats();
-      updateStatsUI();
-    }
-
-    // ---------- Daily target selection ----------
-
-    function simpleHash(str){
-      let h = 0;
-      for(let i=0;i<str.length;i++){
-        h = ((h << 5) - h) + str.charCodeAt(i);
-        h |= 0; // to 32-bit int
-      }
-      return h >>> 0; // unsigned
-    }
-
-    function pickDailyTarget(){
-      if(DATA.length===0) return;
-      const dateKey = getTodayStr();
-      const hash = simpleHash(dateKey);
-      const idx = hash % DATA.length;
-      TARGET = DATA[idx];
-      displayVignette(TARGET);
-    }
-
-    function resetGame(){
-      GUESSED = new Set();
-      const tbody = document.querySelector('#table tbody');
-      if(tbody) tbody.innerHTML='';
-      const guessInput = document.getElementById('guess');
-      if(guessInput) guessInput.value='';
-      guessesToday = 0;
-      bestScoreSoFar = 0;
-      updateProgress(0);
-      showStatus('New daily case loaded. Make your first guess.');
-    }
-
-    function startDailyGame(){
-      pickDailyTarget();
-      resetGame();
-    }
-
-    // ---------- Rendering guesses ----------
-
-    function renderRow(guess){
-      const t=TARGET;
-      const scoreSystem = systemSimilarity(guess.system, t.system);
-      const scoreAge = ageSimilarity(guess.age, t.age);
-      const scoreEpi = jaccard(guess.epidemiology, t.epidemiology);
-      const scoreEti = etiologySimilarity(guess.etiology, t.etiology);
-      const scoreFind = jaccard(guess.findings, t.findings);
-      const scoreMgmt = managementSimilarity(guess.management, t.management);
-      const scoreCourse = courseSimilarity(guess.course, t.course);
-      const mean = avg([scoreSystem,scoreAge,scoreEpi,scoreEti,scoreFind,scoreMgmt,scoreCourse]);
-
-      if(mean > bestScoreSoFar){
-        bestScoreSoFar = mean;
-        updateProgress(bestScoreSoFar);
-      }
-
-      const tr=document.createElement('tr');
-      tr.innerHTML = `
-        <td><strong>${escapeHtml(title(guess.diagnosis))}</strong></td>
-        <td>${renderTokenChips('system', [guess.system].filter(Boolean), [t.system].filter(Boolean))}</td>
-        <td>${renderTokenChips('age', guess.age, t.age)}</td>
-        <td>${renderTokenChips('epidemiology', guess.epidemiology, t.epidemiology)}</td>
-        <td>${renderTokenChips('etiology', guess.etiology, t.etiology)}</td>
-        <td>${renderTokenChips('findings', guess.findings, t.findings)}</td>
-        <td>${renderTokenChips('management', guess.management, t.management)}</td>
-        <td>${renderTokenChips('course', [guess.course].filter(Boolean), [t.course].filter(Boolean))}</td>
-        <td class="score">${(mean*100).toFixed(0)}%</td>`;
-      document.querySelector('#table tbody').appendChild(tr);
-
-      showStatus(`Best similarity so far: ${(bestScoreSoFar*100).toFixed(0)}%. Guesses today: ${guessesToday}.`);
-
-      const allScores = [scoreSystem,scoreAge,scoreEpi,scoreEti,scoreFind,scoreMgmt,scoreCourse];
-      const solved = allScores.every(s=>s>=0.8);
-      if(solved){
-        handleSolved();
-      }
-    }
-
-    function handleSolved(){
-      showStatus(`🎉 Correct! You solved today's diagnosis in ${guessesToday} guesses. Come back tomorrow for a new case.`);
-      updateStatsOnSolve();
-    }
-
-    // ---------- Guess submission ----------
-
-    function addGuess(input){
-      if(!TARGET){
-        showStatus('No active case. Please reload the page.');
-        return;
-      }
-      let key = normalizeToken(input);
-      if(!key){
-        return;
-      }
-      const row = BY_NAME.get(key);
-      if(!row){
-        showStatus('Diagnosis not found in dataset. Try another term.');
-        return;
-      }
-      const canonical = row.diagnosis;
-      if(GUESSED.has(canonical)){
-        showStatus('You already tried that diagnosis. Choose another one.');
-        return;
-      }
-      GUESSED.add(canonical);
-      guessesToday++;
-      renderRow(row);
-    }
-
-    // ---------- DOM wiring ----------
-
-    const guessInput=document.getElementById('guess');
-    const guessBtn=document.getElementById('guessBtn');
-
-    function submitGuess(){
-      addGuess(guessInput.value);
-      guessInput.value='';
-      guessInput.focus();
-    }
-
-    guessBtn.addEventListener('click', submitGuess);
-    guessInput.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); submitGuess(); }});
-
-    const toggleBtn = document.getElementById('toggleInstructions');
-    const panel = document.getElementById('instructionsPanel');
-    if (toggleBtn && panel) {
-      toggleBtn.addEventListener('click', () => {
-        const isOpen = toggleBtn.getAttribute('aria-expanded') === 'true';
-        toggleBtn.setAttribute('aria-expanded', String(!isOpen));
-        if (!isOpen) {
-          panel.hidden = false;
-          panel.classList.add('is-open');
-          toggleBtn.innerHTML = 'Hide Instructions <span class="toggle-icon" aria-hidden="true">▲</span>';
-        } else {
-          panel.classList.remove('is-open');
-          panel.hidden = true;
-          toggleBtn.innerHTML = 'Show Instructions <span class="toggle-icon" aria-hidden="true">▼</span>';
-        }
-      });
-    }
-
-    // ---------- Init ----------
-
-    const rows = parseCSV(CSV_30);
-    loadDataset(rows);
-    loadStats();
-    startDailyGame();
-  })();
-  </script>
-</body>
-</html>
+      'myocardial infarction': 'A 60 year old male presents with chest pain.',
+      'pneumonia': 'A 72 year old female presents with fever and cough.',
+      'asthma': 'A 16 year old male presents with shortness of breath.',
+      'stroke': 'A 71 year old female presents with sudden weakness on one side.',
+      'appendicitis': 'A 21 year old male presents with stomach pain.',
+      'diabetic ketoacidosis': 'A 19 year old female presents feeling very unwell.',
+      'cholelithiasis': 'A 42 year old female presents with upper stomach pain.',
+      'tuberculosis': 'A 28 year old female presents with a long-l
