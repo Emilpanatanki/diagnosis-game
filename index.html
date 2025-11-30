@@ -29,10 +29,7 @@
     }
     .row{display:flex; gap:12px; flex-wrap:wrap}
     .row > *{flex:1 1 0}
-    .row.row-guess > :first-child{flex:1 1 auto;}
-    .row.row-guess > :last-child{flex:0 0 auto;}
 
-    label{font-size:12px; color:var(--muted); display:block; margin-bottom:6px}
     input[type="text"]{
       width:100%;
       background:#ffffff;
@@ -52,6 +49,7 @@
       white-space:nowrap;
     }
     button:disabled{opacity:.5; cursor:not-allowed}
+
     .chips{display:flex; flex-wrap:wrap; gap:6px}
     .chip{
       background:var(--chip);
@@ -77,6 +75,7 @@
       font-size:13px;
     }
     tbody tr:hover{background:#f9fbff}
+
     .legend{
       display:flex;
       gap:12px;
@@ -100,13 +99,12 @@
     .muted{color:var(--muted)}
     .small{font-size:12px}
     .colwrap{overflow:auto; margin-top:8px;}
-    .rightShift{ margin-left: 8px }
 
     .progress-bar{
       margin-top:8px;
       width:100%;
       max-width:100%;
-      height:8px;
+      height:14px;           /* thicker bar */
       border-radius:999px;
       background:#e5eaf3;
       overflow:hidden;
@@ -164,15 +162,16 @@
     </div>
 
     <div class="card" style="margin-top:16px">
-      <div class="row row-guess">
+      <!-- Input row (no label, full-width) -->
+      <div class="row">
         <div>
-          <label for="guess">Your Guess</label>
           <input id="guess" list="diagnosisList" type="text" placeholder="Start typing a diagnosis…" />
           <datalist id="diagnosisList"></datalist>
         </div>
-        <div style="align-self:end; display:flex; gap:8px">
-          <button id="guessBtn" class="rightShift">Add</button>
-        </div>
+      </div>
+      <!-- Add button on its own row, right-aligned -->
+      <div style="margin-top:8px; display:flex; justify-content:flex-end;">
+        <button id="guessBtn">Add</button>
       </div>
 
       <div id="statusMsg" class="small muted" style="margin-top:8px"></div>
@@ -224,23 +223,23 @@
   <script>
   (function(){
     const CSV_30 = `Diagnosis,Aliases,System,AgeGroup,Epidemiology,Etiology,Onset,KeyFindings,Investigation,Management,SeverityRisk
-Myocardial Infarction,Heart attack; MI,cardiovascular,older adult (65+),older male; smoker; atherosclerosis; DM,vascular; thrombotic,acute,chest pain; dyspnea; diaphoresis,ecg; troponin,antiplatelets; anticoagulation; reperfusion,high
-Pneumonia,Lower respiratory tract infection,respiratory,older adult (65+),older adult; winter; aspiration risk,infection,acute,fever; cough; dyspnea; sputum,cxr,antibiotics; supportive care,moderate
-Asthma,Bronchial asthma,respiratory,child,child; atopy; FHx,inflammatory,acute; recurrent; episodic,wheeze; cough; dyspnea,spirometry,bronchodilators; inhaled steroids,low
-Stroke,Cerebrovascular accident; CVA,neurology,older adult (65+),older adult; HTN; AF,vascular; thrombotic,acute,weakness focal; facial droop; confusion,ct; mri,reperfusion; antiplatelets; anticoagulation,high
-Appendicitis,,gastrointestinal,young adult,young adult; appendiceal obstruction,obstructive; infection,acute,RLQ pain; fever; nausea vomiting,clinical; ultrasound,appendectomy,moderate
+Myocardial Infarction,Heart attack; MI,cardiovascular,older adult (65+),male; smoker; atherosclerosis; DM,vascular; thrombotic,acute,chest pain; dyspnea; diaphoresis,ecg; troponin,antiplatelets; anticoagulation; reperfusion,high
+Pneumonia,Lower respiratory tract infection,respiratory,older adult (65+),winter; aspiration; comorbidity,infection,acute,fever; cough; dyspnea; sputum,cxr,antibiotics; supportive,moderate
+Asthma,Bronchial asthma,respiratory,child,atopy; FHx,inflammatory,acute; recurrent; episodic,wheeze; cough; dyspnea,spirometry,bronchodilators; inhaled steroids,low
+Stroke,Cerebrovascular accident; CVA,neurology,older adult (65+),HTN; AF,vascular; thrombotic,acute,weakness focal; facial droop; confusion,ct; mri,reperfusion; antiplatelets; anticoagulation,high
+Appendicitis,,gastrointestinal,young adult,appendiceal obstruction,obstructive; infection,acute,RLQ pain; fever; nausea vomiting,clinical; ultrasound,appendectomy,moderate
 Diabetic Ketoacidosis,DKA,endocrine,adolescent,T1DM; insulin omission; infection,metabolic,acute,polyuria; polydipsia; dehydration; nausea vomiting,blood glucose; ketones; abg,iv fluids; insulin; electrolytes,high
 Cholelithiasis,Gallstones,gastrointestinal,middle adult,female; obesity; fatty meals; pregnancy,obstructive,variable,RUQ pain; nausea,ultrasound,analgesia; elective cholecystectomy,low
 Tuberculosis,TB,respiratory,young adult,close contact; high-prevalence area,infection,chronic,cough; weight loss; night sweats; fever,sputum smear; cxr,anti-TB therapy,moderate
 Hypertension,High blood pressure,cardiovascular,middle adult,FHx; obesity; high salt,genetic; idiopathic,chronic,headache; often asymptomatic,BP measurement,lifestyle; antihypertensives,moderate
-Chronic Obstructive Pulmonary Disease,COPD,respiratory,older adult (65+),older smoker; occupational exposure,inflammatory; obstructive,chronic,dyspnea; cough; sputum,spirometry,bronchodilators; inhaled steroids; smoking cessation,moderate
+Chronic Obstructive Pulmonary Disease,COPD,respiratory,older adult (65+),smoker; occupational exposure,inflammatory; obstructive,chronic,dyspnea; cough; sputum,spirometry,bronchodilators; inhaled steroids; smoking cessation,moderate
 Gastroesophageal Reflux Disease,GERD,gastrointestinal,middle adult,obesity; late meals; hiatal hernia,functional,chronic,heartburn; regurgitation; chest pain,pH monitoring; endoscopy,PPI therapy; lifestyle,low
 Migraine,,neurology,young adult,female; FHx,idiopathic,recurrent; episodic,headache; photophobia; nausea vomiting,clinical,analgesics; migraine prophylaxis,low
 Depression,Major depressive disorder,psychiatry,young adult,prior episode; psychosocial stressors,idiopathic; genetic,chronic; episodic,low mood; anhedonia; fatigue,clinical,antidepressants; psychotherapy,moderate
 Anxiety Disorder,Generalized anxiety disorder,psychiatry,young adult,chronic worry; stress,idiopathic,chronic,restlessness; insomnia; fatigue,clinical,anxiolytics; psychotherapy,low
 Bipolar Disorder,Manic depression,psychiatry,young adult,FHx mood disorder,idiopathic; genetic,episodic,mood swings; ↓ sleep need,clinical,mood stabilizers; antipsychotics,moderate
 Peptic Ulcer Disease,PUD,gastrointestinal,middle adult,NSAIDs; H. pylori,infection,chronic; recurrent,epigastric pain; nausea,endoscopy,PPI; H. pylori eradication,low
-Viral Hepatitis B,Hep B,gastrointestinal,young adult,unvaccinated; blood exposure; sexual exposure,infection,acute; chronic,jaundice; fatigue; nausea,HbsAg; LFTs,antivirals; supportive care,moderate
+Viral Hepatitis B,Hep B,gastrointestinal,young adult,unvaccinated; blood exposure; sexual exposure,infection,acute; chronic,jaundice; fatigue; nausea,HbsAg; LFTs,antivirals; supportive,moderate
 Viral Hepatitis C,Hep C,gastrointestinal,middle adult,IVDU; past transfusion,infection,chronic,fatigue; often asymptomatic,HCV Ab; HCV RNA,direct-acting antivirals,moderate
 HIV/AIDS,Human immunodeficiency virus infection,immunology,young adult,unprotected sex; IVDU,infection,chronic,weight loss; fever; opportunistic infections,HIV Ab/Ag; HIV RNA,ART; OI prophylaxis,high
 Sepsis,Septicemia,immunology,older adult (65+),hospitalized; invasive devices,infection,acute,fever; hypotension; tachycardia,blood cultures; lactate,iv antibiotics; iv fluids; vasopressors,high
@@ -252,16 +251,16 @@ Otitis Media,,ent,infant,daycare; recent URTI,infection,acute,ear pain; fever; i
 Otitis Externa,Swimmer's ear,ent,adolescent,swimmer; local trauma,infection,acute,ear pain; discharge,otoscopy,topical antibiotics; ear drops,low
 Sinusitis,Rhinosinusitis,ent,young adult,post-upper RTI; allergic rhinitis,infection,acute,facial pain; nasal congestion; headache,clinical,IN steroids; decongestants; ±antibiotics,low
 Tonsillitis,Pharyngitis,ent,adolescent,winter; close contact,infection,acute,sore throat; fever; dysphagia,throat swab,analgesia; antibiotics if bacterial,low
-Conjunctivitis,Pink eye,ophthalmology,young adult,contact; viral/ bacterial,infection,acute,red eye; discharge,clinical,topical antibiotics or supportive care,low
+Conjunctivitis,Pink eye,ophthalmology,young adult,contact; viral/ bacterial,infection,acute,red eye; discharge,clinical,topical antibiotics or supportive,low
 Glaucoma,,ophthalmology,older adult (65+),↑ IOP; FHx,degenerative,chronic,peripheral vision loss; headache,tonometry,IOP-lowering drops; ±surgery,moderate
-Cataract,,ophthalmology,older adult (65+),age-related lens change,degenerative,chronic,blurred vision; glare,slit-lamp exam,cataract surgery,low
+Cataract,,ophthalmology,older adult (65+),lens degeneration,degenerative,chronic,blurred vision; glare,slit-lamp exam,cataract surgery,low
 Retinal Detachment,,ophthalmology,middle adult,myopia; eye trauma; prior surgery,degenerative,acute,flashes; floaters; shadow in vision,fundoscopy,urgent retinal surgery,high
 Epilepsy,Seizure disorder,neurology,young adult,idiopathic; prior brain injury,idiopathic,chronic; recurrent,seizure; postictal confusion,EEG,antiepileptic drugs,moderate
-Multiple Sclerosis,MS,neurology,young adult,young F; temperate climate,autoimmune,chronic,vision blur; focal weakness; numbness,MRI; CSF,DMT; relapse steroids,moderate
-Parkinson's Disease,,neurology,older adult (65+),older male; idiopathic,degenerative,chronic,tremor; rigidity; bradykinesia,clinical,dopaminergic therapy; supportive care,moderate
-Alzheimer's Disease,,neurology,older adult (65+),advanced age; FHx,degenerative,chronic,memory loss; confusion,clinical; neuropsych,cognitive enhancers; supportive care,high
-Meningitis,,neurology,child,unvaccinated; close living,infection,acute,fever; neck stiffness; headache,LP,iv antibiotics; supportive care,high
-Encephalitis,,neurology,young adult,viral; seasonal exposure,infection; inflammatory,acute,fever; confusion; seizure,MRI; CSF,antivirals (when indicated); supportive care,high
+Multiple Sclerosis,MS,neurology,young adult,F; temperate climate,autoimmune,chronic,vision blur; focal weakness; numbness,MRI; CSF,DMT; relapse steroids,moderate
+Parkinson's Disease,,neurology,older adult (65+),male; idiopathic,degenerative,chronic,tremor; rigidity; bradykinesia,clinical,dopaminergic therapy; supportive,moderate
+Alzheimer's Disease,,neurology,older adult (65+),degenerative; FHx,degenerative,chronic,memory loss; confusion,clinical; neuropsych,cognitive enhancers; supportive,high
+Meningitis,,neurology,child,unvaccinated; close living,infection,acute,fever; neck stiffness; headache,LP,iv antibiotics; supportive,high
+Encephalitis,,neurology,young adult,viral; seasonal exposure,infection; inflammatory,acute,fever; confusion; seizure,MRI; CSF,antivirals (if indicated); supportive,high
 Herpes Zoster,Shingles,dermatology,older adult (65+),reactivation VZV,infection,acute,vesicular rash; dermatomal pain,clinical,antivirals; analgesia,mixed
 Cellulitis,,dermatology,middle adult,skin break; chronic edema,infection,acute,fever; erythema; warmth,clinical,systemic antibiotics; limb elevation,low
 Psoriasis,,dermatology,young adult,FHx; chronic inflammatory skin dz,inflammatory,chronic,scaly plaques; pruritus,clinical,topical steroids; immunomodulators,low
@@ -270,10 +269,10 @@ Acne Vulgaris,Acne,dermatology,adolescent,puberty; ↑ sebum,inflammatory,chroni
 Melanoma,,dermatology,middle adult,fair skin; intense sun,neoplastic,chronic,irregular lesion; color change,biopsy,surgical excision; oncology referral,high
 Basal Cell Carcinoma,BCC,dermatology,older adult (65+),chronic sun,neoplastic,chronic,pearly papule; ulcer,biopsy,local excision; destructive therapy,low
 Squamous Cell Carcinoma,SCC,dermatology,older adult (65+),sun; IS,neoplastic,chronic,ulcerated nodule; scale,biopsy,surgical excision; ±radiotherapy,moderate
-Rheumatoid Arthritis,RA,rheumatology,middle adult,young–middle F; autoimmune,autoimmune,chronic,arthralgia; joint swelling; morning stiffness,RF; anti-CCP; ESR/CRP,DMARDs; NSAIDs; steroids,moderate
-Osteoarthritis,,rheumatology,older adult (65+),age; joint overuse; obesity,degenerative,chronic,arthralgia; worse with use; brief stiffness,x-ray,analgesia; physio; joint replacement,low
-Gout,,rheumatology,middle adult,middle-aged M; hyperuricemia; alcohol,metabolic,acute; recurrent,joint swelling; severe pain (1st MTP),uric acid; joint aspiration,NSAIDs; colchicine; urate-lowering,low
-Systemic Lupus Erythematosus,SLE,rheumatology,young adult,young F; autoimmune; multisystem,autoimmune,chronic,malar rash; arthralgia; fatigue,ANA; anti-dsDNA,immunosuppressants; steroids,mixed
+Rheumatoid Arthritis,RA,rheumatology,middle adult,F; autoimmune,autoimmune,chronic,arthralgia; joint swelling; morning stiffness,RF; anti-CCP; ESR/CRP,DMARDs; NSAIDs; steroids,moderate
+Osteoarthritis,,rheumatology,older adult (65+),wear-and-tear; obesity,degenerative,chronic,arthralgia; worse with use; brief stiffness,x-ray,analgesia; physio; joint replacement,low
+Gout,,rheumatology,middle adult,M; hyperuricemia; alcohol,metabolic,acute; recurrent,joint swelling; severe pain (1st MTP),uric acid; joint aspiration,NSAIDs; colchicine; urate-lowering,low
+Systemic Lupus Erythematosus,SLE,rheumatology,young adult,F; autoimmune; multisystem,autoimmune,chronic,malar rash; arthralgia; fatigue,ANA; anti-dsDNA,immunosuppressants; steroids,mixed
 Anemia (Iron Deficiency),,hematology,young adult,menorrhagia; low iron intake; chronic blood loss,deficiency,chronic,fatigue; pallor; dyspnea on exertion,CBC; ferritin,oral iron; treat cause,low`;
 
     // Abstract strict vignettes
@@ -334,13 +333,20 @@ Anemia (Iron Deficiency),,hematology,young adult,menorrhagia; low iron intake; c
     const RELATEDNESS={
       system:{ 'ent':{'respiratory':0.6} },
       etiology:{ 'infection':{'inflammatory':0.5,'autoimmune':0.25}, 'autoimmune':{'inflammatory':0.6}, 'vascular':{'thrombotic':0.7}, 'unknown':{} },
-      management:{ 'medication':{'mixed':0.7,'supportive care':0.4}, 'surgery':{'mixed':0.6}, 'antivirals':{'medication':0.5} },
+      management:{ 'medication':{'mixed':0.7,'supportive':0.4}, 'surgery':{'mixed':0.6}, 'antivirals':{'medication':0.5} },
       course:{ 'acute':{'subacute':0.6,'episodic':0.5}, 'chronic':{'recurrent':0.55,'variable':0.4} },
       age:{}
     };
 
     const AGE_ORDER = [
-      'neonate (0-28d)','infant','toddler','child','adolescent','young adult','middle adult','older adult (65+)'
+      'neonate (0-28d)',
+      'infant',
+      'toddler',
+      'child',
+      'adolescent',
+      'young adult',
+      'middle adult',
+      'older adult (65+)'
     ];
     const AGE_ALIASES = {
       'children':['child'],
@@ -351,6 +357,18 @@ Anemia (Iron Deficiency),,hematology,young adult,menorrhagia; low iron intake; c
       'children/young adults':['child','adolescent','young adult']
     };
     const AGE_INDEX = new Map(AGE_ORDER.map((v,i)=>[v,i]));
+
+    // Pretty labels for age for display only
+    const AGE_DISPLAY = {
+      'infant': 'infant (0–1y)',
+      'toddler': 'toddler (1–3y)',
+      'child': 'child (4–11y)',
+      'adolescent': 'adolescent (12–18y)',
+      'young adult': 'young adult (18–40y)',
+      'middle adult': 'middle adult (40–65y)',
+      'older adult (65+)': 'older adult (65+)',
+      'neonate (0-28d)': 'neonate (0–28d)'
+    };
 
     // Weighted scoring
     const WEIGHTS = {
@@ -516,6 +534,12 @@ Anemia (Iron Deficiency),,hematology,young adult,menorrhagia; low iron intake; c
       return best;
     }
 
+    function displayAgeToken(tok){
+      const norm = normalizeToken(tok);
+      if(AGE_DISPLAY[norm]) return AGE_DISPLAY[norm];
+      return title(tok);
+    }
+
     function renderTokenChips(domain, guessTokens, targetTokens){
       const g = (domain==='age') ? expandAgeTokens(guessTokens) : guessTokens;
       const t = (domain==='age') ? expandAgeTokens(targetTokens) : targetTokens;
@@ -523,7 +547,8 @@ Anemia (Iron Deficiency),,hematology,young adult,menorrhagia; low iron intake; c
       g.forEach(tok=>{
         const s = maxSimAgainst(tok, t, domain);
         const cls = clsForScore(s);
-        parts.push(`<span class="chip ${cls}" title="Similarity: ${(s*100).toFixed(0)}%"> ${escapeHtml(title(tok))}</span>`);
+        const label = (domain === 'age') ? displayAgeToken(tok) : title(tok);
+        parts.push(`<span class="chip ${cls}" title="Similarity: ${(s*100).toFixed(0)}%"> ${escapeHtml(label)}</span>`);
       });
       if(parts.length===0) return '<span class="muted">—</span>';
       return parts.join(' ');
@@ -590,7 +615,8 @@ Anemia (Iron Deficiency),,hematology,young adult,menorrhagia; low iron intake; c
     function simpleHash(str){
       let h = 0;
       for(let i=0;i<str.length;i++){
-        h = ((h << 5) - h) + str.charCodeAt(i);
+        const ch = str.charCodeAt(i);
+        h = ((h << 5) - h) + ch;
         h |= 0;
       }
       return h >>> 0;
@@ -676,6 +702,11 @@ Anemia (Iron Deficiency),,hematology,young adult,menorrhagia; low iron intake; c
         handleSolved();
       }
     }
+
+    function systemSimilarity(a,b){ if(!a&&!b) return 1; if(!a||!b) return 0; if(a===b) return 1; return relScore('system',a,b); }
+    function etiologySimilarity(aSet,bSet){ return Math.max(jaccard(aSet,bSet), setRelatedness('etiology',aSet,bSet)); }
+    function managementSimilarity(aSet,bSet){ return Math.max(jaccard(aSet,bSet), setRelatedness('management',aSet,bSet)); }
+    function courseSimilarity(a,b){ if(!a&&!b) return 1; if(!a||!b) return 0; if(a===b) return 1; return relScore('course',a,b); }
 
     function handleSolved(){
       solvedToday = true;
