@@ -34,7 +34,7 @@
     th, td{border-bottom:1px solid var(--border); padding:10px; text-align:left; vertical-align:top; font-size:14px}
     tbody tr:hover{background:#f9fbff}
     .score{font-weight:700}
-    .legend{display:flex; gap:12px; align-items:center; color:var(--muted); font-size:13px}
+    .legend{display:flex; gap:12px; align-items:center; color:var(--muted); font-size:13px; flex-wrap:wrap}
     .swatch{width:14px; height:14px; border-radius:4px; display:inline-block; margin-right:6px}
     .swatch.g{background:var(--green)} .swatch.y{background:var(--amber)} .swatch.o{background:var(--orange)} .swatch.r{background:var(--red)}
     .muted{color:var(--muted)}
@@ -46,42 +46,78 @@
     .toggle-icon{ display:inline-block }
     .instructions-panel{ display:none }
     .instructions-panel.is-open{ display:block }
+
+    .progress-bar{
+      margin-top:8px;
+      width:100%;
+      max-width:260px;
+      height:8px;
+      border-radius:999px;
+      background:#e5eaf3;
+      overflow:hidden;
+    }
+    .progress-inner{
+      height:100%;
+      width:0;
+      border-radius:999px;
+      background:var(--accent);
+      transition:width .2s ease;
+    }
   </style>
 </head>
 <body>
   <div class="wrap">
     <h1>Guess the Diagnosis...🤔</h1>
+
     <div class="card" style="margin-top:12px">
       <div class="row" style="align-items:center; justify-content:space-between">
         <div style="flex:1 1 auto">
-          <button id="toggleInstructions" class="toggle-btn" aria-expanded="false" aria-controls="instructionsPanel">Show Instructions <span class="toggle-icon" aria-hidden="true">▼</span></button>
+          <button id="toggleInstructions" class="toggle-btn" aria-expanded="false" aria-controls="instructionsPanel">
+            Show Instructions <span class="toggle-icon" aria-hidden="true">▼</span>
+          </button>
+        </div>
+        <div>
+          <div id="stats" class="small muted"></div>
         </div>
       </div>
       <div id="instructionsPanel" class="instructions-panel" hidden>
-  <div class="small muted" style="margin:12px 0 0 0">
-    <p><em>(Like Wordle, but for diagnoses!)</em></p>
-    <p><strong>1) Make a guess.</strong> Enter any diagnosis and hit <strong>Add Diagnosis</strong>.</p>
-    <p><strong>2) Check the colors.</strong> Each column (system, age, epi, etc.) shows how close you are:<br>
-      🟩 exact &nbsp; 🟨 close &nbsp; 🟧 somewhat off &nbsp; 🟥 wrong
-    </p>
-    <p><strong>3) Refine.</strong> Use the colors to adjust your next guess.</p>
-    <p><strong>4) Win.</strong> Get all greens in as few guesses as possible. Use <strong>Reset Diagnosis</strong> for a new case.</p>
-  </div>
-</div>
-
+        <div class="small muted" style="margin:12px 0 0 0">
+          <p><em>(Like Wordle, but for diagnoses!)</em></p>
+          <p><strong>1) Read today's case vignette.</strong> Think of the most likely diagnosis.</p>
+          <p><strong>2) Make a guess.</strong> Enter any diagnosis from the list and hit <strong>Add Diagnosis</strong>.</p>
+          <p><strong>3) Check the colors.</strong> Each column (system, age, epi, etc.) shows how close you are:<br>
+            🟩 exact &nbsp; 🟨 close &nbsp; 🟧 somewhat off &nbsp; 🟥 different
+          </p>
+          <p><strong>4) Refine.</strong> Use the colors to adjust your next guess.</p>
+          <p><strong>5) Daily case.</strong> There is one diagnosis per day. Once solved, come back tomorrow for a new case.</p>
+        </div>
+      </div>
     </div>
+
+    <!-- Daily vignette card -->
+    <div id="vignetteCard" class="card" style="margin-top:16px">
+      <div class="small muted">Today's case</div>
+      <p id="vignetteText" style="margin:8px 0 0 0"></p>
+    </div>
+
     <div class="card" style="margin-top:16px">
       <div class="row">
         <div>
-          <label>Your Guess</label>
-          <input id="guess" list="diagnosisList" type="text" placeholder="Start typing…" />
+          <label for="guess">Your Guess</label>
+          <input id="guess" list="diagnosisList" type="text" placeholder="Start typing a diagnosis…" />
           <datalist id="diagnosisList"></datalist>
         </div>
         <div style="align-self:end; display:flex; gap:8px">
           <button id="guessBtn" class="rightShift">Add Diagnosis</button>
-          <button id="resetBtn" class="ghost rightShift">Reset Diagnosis</button>
         </div>
       </div>
+
+      <div id="statusMsg" class="small muted" style="margin-top:8px"></div>
+
+      <div class="progress-bar" role="progressbar" aria-label="Best similarity so far" aria-valuemin="0" aria-valuemax="100">
+        <div id="progressInner" class="progress-inner" aria-valuenow="0"></div>
+      </div>
+
       <div class="legend" style="margin-top:10px">
         <span><span class="swatch g"></span>Green = exact/very close</span>
         <span><span class="swatch y"></span>Yellow = close near-miss</span>
@@ -107,10 +143,12 @@
         </table>
       </div>
     </div>
+
     <p class="small muted" style="margin-top:10px">Educational use only. Not medical advice.</p>
   </div>
 
   <script>
+  (function(){
     const CSV_30 = `Diagnosis,Aliases,System,AgeGroup,Epidemiology,Etiology,Onset,KeyFindings,Investigation,Management,SeverityRisk
 Myocardial Infarction,Heart attack; MI,cardiovascular,middle adult; older adult (65+),male >50; atherosclerosis,vascular; thrombotic,acute,chest pain; dyspnea; diaphoresis,ecg; troponin,mixed,high
 Pneumonia,Lower respiratory tract infection,respiratory,infant; older adult (65+),older adult (65+); winter; aspiration risk,infection,acute,fever; cough; dyspnea; sputum,cxr,medication,moderate
@@ -164,11 +202,60 @@ Gout,,rheumatology,young adult; middle adult,male; hyperuricemia; alcohol,metabo
 Systemic Lupus Erythematosus,SLE,rheumatology,young adult; middle adult,female; autoimmune,autoimmune,chronic,malar rash; arthralgia; fatigue,ana; anti-dsdna,immunosuppressants,mixed
 Anemia (Iron Deficiency),,hematology,child; young adult; middle adult; older adult (65+),low iron intake; blood loss,deficiency,chronic,fatigue; pallor; dyspnea on exertion,cbc; ferritin,mixed,low`;
 
-    const GREEN=0.8;
-    let DATA=[];
-    let BY_NAME=new Map();
-    let TARGET=null;
-    let GUESSED=new Set();
+    // Abstract vignettes mapped by canonical diagnosis (normalized)
+    const VIGNETTES = {
+      'myocardial infarction': 'A 60-year-old male develops chest discomfort.',
+      'pneumonia': 'A 72-year-old female develops fever and cough.',
+      'asthma': 'A 16-year-old male experiences episodes of difficulty breathing.',
+      'stroke': 'A 71-year-old female suddenly develops unilateral weakness.',
+      'appendicitis': 'A 21-year-old male reports worsening abdominal discomfort.',
+      'diabetic ketoacidosis': 'A 19-year-old female with known diabetes feels increasingly unwell.',
+      'cholelithiasis': 'A 42-year-old female experiences intermittent upper abdominal discomfort.',
+      'tuberculosis': 'A 28-year-old female reports a long-standing cough.',
+      'hypertension': 'A 55-year-old female is found to have elevated blood pressure during a routine visit.',
+      'chronic obstructive pulmonary disease': 'A 67-year-old male reports gradually worsening breathlessness.',
+      'gastroesophageal reflux disease': 'A 35-year-old male experiences burning chest discomfort after meals.',
+      'migraine': 'A 25-year-old male experiences recurrent headaches.',
+      'depression': 'A 31-year-old female reports low mood and reduced interest in activities.',
+      'anxiety disorder': 'A 23-year-old male reports persistent worry and restlessness.',
+      'bipolar disorder': 'A 26-year-old male reports periods of elevated energy alternating with low mood.',
+      'peptic ulcer disease': 'A 48-year-old female has recurring upper abdominal pain.',
+      'viral hepatitis b': 'A 32-year-old male reports increasing fatigue.',
+      'viral hepatitis c': 'A 58-year-old female reports chronic tiredness.',
+      'hiv/aids': 'A 33-year-old male reports unintentional weight loss.',
+      'sepsis': 'An 80-year-old female becomes acutely unwell with fever.',
+      'urinary tract infection': 'A 26-year-old female develops burning discomfort when urinating.',
+      'pyelonephritis': 'A 40-year-old female develops fever and flank discomfort.',
+      'nephrolithiasis': 'A 34-year-old male experiences sudden severe flank pain.',
+      'chronic kidney disease': 'A 70-year-old male reports fatigue and ankle swelling.',
+      'otitis media': 'A 3-year-old male becomes febrile and irritable.',
+      'otitis externa': 'A 14-year-old female develops ear pain after swimming.',
+      'sinusitis': 'A 29-year-old male has persistent nasal congestion and facial pressure.',
+      'tonsillitis': 'A 17-year-old female develops sore throat and fever.',
+      'conjunctivitis': 'A 22-year-old female notices redness and irritation in one eye.',
+      'glaucoma': 'A 68-year-old male reports gradually changing vision.',
+      'cataract': 'A 74-year-old female reports slowly worsening vision.',
+      'retinal detachment': 'A 56-year-old male notices sudden visual disturbance.',
+      'epilepsy': 'A 20-year-old female experiences repeated episodes of altered awareness.',
+      'multiple sclerosis': 'A 27-year-old female experiences intermittent neurological symptoms.',
+      "parkinson's disease": 'A 73-year-old male develops gradually worsening movement difficulties.',
+      "alzheimer's disease": 'A 79-year-old female develops progressive memory problems.',
+      'meningitis': 'A 6-year-old male develops fever and headache.',
+      'encephalitis': 'A 19-year-old female develops fever and confusion.',
+      'herpes zoster': 'A 64-year-old female develops localized skin discomfort.',
+      'cellulitis': 'A 52-year-old male develops redness and warmth in part of the skin.',
+      'psoriasis': 'A 30-year-old male develops recurrent scaly skin patches.',
+      'eczema': 'A 5-year-old female develops itchy dry skin patches.',
+      'acne vulgaris': 'A 16-year-old female develops facial skin bumps.',
+      'melanoma': 'A 45-year-old male notices a changing skin lesion.',
+      'basal cell carcinoma': 'A 62-year-old female notices a slowly enlarging skin spot.',
+      'squamous cell carcinoma': 'A 70-year-old male notices a persistent rough skin lesion.',
+      'rheumatoid arthritis': 'A 38-year-old female reports joint pain and morning stiffness.',
+      'osteoarthritis': 'A 68-year-old female reports joint discomfort that worsens with activity.',
+      'gout': 'A 47-year-old male develops sudden pain in one joint.',
+      'systemic lupus erythematosus': 'A 29-year-old female develops intermittent joint pain and fatigue.',
+      'anemia (iron deficiency)': 'A 24-year-old female reports persistent tiredness.'
+    };
 
     const RELATEDNESS={
       system:{ 'ent':{'respiratory':0.6} },
@@ -191,7 +278,26 @@ Anemia (Iron Deficiency),,hematology,child; young adult; middle adult; older adu
     };
     const AGE_INDEX = new Map(AGE_ORDER.map((v,i)=>[v,i]));
 
+    let DATA=[];
+    let BY_NAME=new Map();
+    let TARGET=null;
+    let GUESSED=new Set();
+    let bestScoreSoFar=0;
+    let guessesToday=0;
+
+    const STATS_KEY = 'dxStats';
+    let stats = {
+      casesPlayed: 0,
+      totalGuesses: 0,
+      bestGuesses: null,
+      streak: 0,
+      lastSolvedDate: null
+    };
+
+    // ---------- Utility / parsing ----------
+
     function normalizeToken(s){ return (s||'').toString().trim().toLowerCase(); }
+
     function splitTags(s){
       if(!s) return [];
       const normalized = s.replace(/[,/|]/g,';').replace(/\s*;\s*/g,';').toLowerCase();
@@ -241,9 +347,9 @@ Anemia (Iron Deficiency),,hematology,child; young adult; middle adult; older adu
       const ib = AGE_INDEX.has(b)?AGE_INDEX.get(b):null;
       if(ia==null||ib==null) return 0;
       const d=Math.abs(ia-ib);
-      if(d===1) return 0.75; // close near-miss
-      if(d===2) return 0.55; // far near-miss
-      return 0.25; // distant
+      if(d===1) return 0.75;
+      if(d===2) return 0.55;
+      return 0.25;
     }
 
     function relScore(domain,a,b){
@@ -292,7 +398,12 @@ Anemia (Iron Deficiency),,hematology,child; young adult; middle adult; older adu
     function managementSimilarity(aSet,bSet){ return Math.max(jaccard(aSet,bSet), setRelatedness('management',aSet,bSet)); }
     function courseSimilarity(a,b){ if(!a&&!b) return 1; if(!a||!b) return 0; if(a===b) return 1; return relScore('course',a,b); }
 
-    function clsForScore(score){ if(score>=0.8) return 'green'; if(score>=0.65) return 'amber'; if(score>=0.45) return 'orange'; return 'red'; }
+    function clsForScore(score){
+      if(score>=0.8) return 'green';
+      if(score>=0.65) return 'amber';
+      if(score>=0.45) return 'orange';
+      return 'red';
+    }
 
     function maxSimAgainst(token, targetTokens, domain){
       if(domain==='age'){
@@ -319,7 +430,7 @@ Anemia (Iron Deficiency),,hematology,child; young adult; middle adult; older adu
       g.forEach(tok=>{
         const s = maxSimAgainst(tok, t, domain);
         const cls = clsForScore(s);
-        parts.push(`<span class="chip ${cls}">${escapeHtml(title(tok))}</span>`);
+        parts.push(`<span class="chip ${cls}" title="Similarity: ${(s*100).toFixed(0)}%"> ${escapeHtml(title(tok))}</span>`);
       });
       if(parts.length===0) return '<span class="muted">—</span>';
       return parts.join(' ');
@@ -343,37 +454,142 @@ Anemia (Iron Deficiency),,hematology,child; young adult; middle adult; older adu
       DATA = rows.map(normalizeRow).filter(r=>r.diagnosis);
       BY_NAME = new Map();
       DATA.forEach(r=>{
-        BY_NAME.set(r.diagnosis, r.diagnosis);
-        r.aliases.forEach(a=>BY_NAME.set(a, r.diagnosis));
+        BY_NAME.set(r.diagnosis, r);
+        r.aliases.forEach(a=>BY_NAME.set(a, r));
       });
       const dl=document.getElementById('diagnosisList');
       dl.innerHTML = DATA.map(r=>`<option value="${escapeHtml(title(r.diagnosis))}"></option>`).join('') +
                      DATA.flatMap(r=>r.aliases.map(a=>`<option value="${escapeHtml(title(a))}"></option>`)).join('');
-      resetGame();
     }
 
     function title(s){ return (s||'').split(' ').map(w=> w? (w[0].toUpperCase()+w.slice(1)) : '').join(' '); }
-    function escapeHtml(str){ return str.replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m])); }
 
-    function resetGame(){
-      GUESSED = new Set();
-      document.querySelector('#table tbody').innerHTML='';
-      document.getElementById('guess').value='';
+    function escapeHtml(str){
+      return (str||'').replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
     }
-    function pickRandom(){ if(DATA.length===0) return; TARGET = DATA[Math.floor(Math.random()*DATA.length)]; }
 
-    function addGuess(input){
-      if(!TARGET){ alert('Click Reset Diagnosis to start.'); return; }
-      let key=normalizeToken(input); if(!key) return;
-      if(BY_NAME.has(key)) key=BY_NAME.get(key);
-      const row=DATA.find(r=>r.diagnosis===key);
-      if(!row){ alert('Not found. Try another term.'); return; }
-      if(GUESSED.has(key)) return;
-      GUESSED.add(key);
-      renderRow(row);
+    // ---------- Game state helpers ----------
+
+    function showStatus(msg){
+      const el = document.getElementById('statusMsg');
+      if(el) el.textContent = msg || '';
+    }
+
+    function updateProgress(score){
+      const bar = document.getElementById('progressInner');
+      if(!bar) return;
+      const pct = Math.round(score*100);
+      bar.style.width = pct + '%';
+      bar.setAttribute('aria-valuenow', String(pct));
+    }
+
+    function displayVignette(dx){
+      const vDiv = document.getElementById('vignetteText');
+      if(!vDiv) return;
+      const vign = VIGNETTES[dx.diagnosis] || 'A patient presents with nonspecific symptoms.';
+      vDiv.textContent = vign;
     }
 
     function avg(xs){ return xs.reduce((a,b)=>a+b,0)/xs.length; }
+
+    // ---------- Stats (localStorage) ----------
+
+    function loadStats(){
+      try{
+        const raw = localStorage.getItem(STATS_KEY);
+        if(raw){
+          const obj = JSON.parse(raw);
+          stats = Object.assign(stats, obj);
+        }
+      }catch(e){}
+      updateStatsUI();
+    }
+
+    function saveStats(){
+      try{
+        localStorage.setItem(STATS_KEY, JSON.stringify(stats));
+      }catch(e){}
+    }
+
+    function updateStatsUI(){
+      const el = document.getElementById('stats');
+      if(!el) return;
+      const avgGuesses = stats.casesPlayed>0 ? (stats.totalGuesses / stats.casesPlayed).toFixed(1) : '-';
+      const best = stats.bestGuesses != null ? stats.bestGuesses : '-';
+      const streak = stats.streak || 0;
+      el.textContent = `Cases solved: ${stats.casesPlayed} | Avg guesses: ${avgGuesses} | Best: ${best} | Streak: ${streak}`;
+    }
+
+    function getTodayStr(){
+      return new Date().toISOString().slice(0,10);
+    }
+
+    function getYesterdayStr(){
+      const d = new Date();
+      d.setDate(d.getDate()-1);
+      return d.toISOString().slice(0,10);
+    }
+
+    function updateStatsOnSolve(){
+      const today = getTodayStr();
+      if(stats.lastSolvedDate === today){
+        // Already counted today
+        return;
+      }
+      stats.casesPlayed += 1;
+      stats.totalGuesses += guessesToday;
+      if(stats.bestGuesses == null || guessesToday < stats.bestGuesses){
+        stats.bestGuesses = guessesToday;
+      }
+      const yesterday = getYesterdayStr();
+      if(stats.lastSolvedDate === yesterday){
+        stats.streak = (stats.streak || 0) + 1;
+      }else{
+        stats.streak = 1;
+      }
+      stats.lastSolvedDate = today;
+      saveStats();
+      updateStatsUI();
+    }
+
+    // ---------- Daily target selection ----------
+
+    function simpleHash(str){
+      let h = 0;
+      for(let i=0;i<str.length;i++){
+        h = ((h << 5) - h) + str.charCodeAt(i);
+        h |= 0; // to 32-bit int
+      }
+      return h >>> 0; // unsigned
+    }
+
+    function pickDailyTarget(){
+      if(DATA.length===0) return;
+      const dateKey = getTodayStr();
+      const hash = simpleHash(dateKey);
+      const idx = hash % DATA.length;
+      TARGET = DATA[idx];
+      displayVignette(TARGET);
+    }
+
+    function resetGame(){
+      GUESSED = new Set();
+      const tbody = document.querySelector('#table tbody');
+      if(tbody) tbody.innerHTML='';
+      const guessInput = document.getElementById('guess');
+      if(guessInput) guessInput.value='';
+      guessesToday = 0;
+      bestScoreSoFar = 0;
+      updateProgress(0);
+      showStatus('New daily case loaded. Make your first guess.');
+    }
+
+    function startDailyGame(){
+      pickDailyTarget();
+      resetGame();
+    }
+
+    // ---------- Rendering guesses ----------
 
     function renderRow(guess){
       const t=TARGET;
@@ -385,6 +601,11 @@ Anemia (Iron Deficiency),,hematology,child; young adult; middle adult; older adu
       const scoreMgmt = managementSimilarity(guess.management, t.management);
       const scoreCourse = courseSimilarity(guess.course, t.course);
       const mean = avg([scoreSystem,scoreAge,scoreEpi,scoreEti,scoreFind,scoreMgmt,scoreCourse]);
+
+      if(mean > bestScoreSoFar){
+        bestScoreSoFar = mean;
+        updateProgress(bestScoreSoFar);
+      }
 
       const tr=document.createElement('tr');
       tr.innerHTML = `
@@ -398,17 +619,60 @@ Anemia (Iron Deficiency),,hematology,child; young adult; middle adult; older adu
         <td>${renderTokenChips('course', [guess.course].filter(Boolean), [t.course].filter(Boolean))}</td>
         <td class="score">${(mean*100).toFixed(0)}%</td>`;
       document.querySelector('#table tbody').appendChild(tr);
-      if([scoreSystem,scoreAge,scoreEpi,scoreEti,scoreFind,scoreMgmt,scoreCourse].every(s=>s>=0.8)){
-        setTimeout(()=>alert('🎉 Correct! You found the diagnosis.'), 50);
+
+      showStatus(`Best similarity so far: ${(bestScoreSoFar*100).toFixed(0)}%. Guesses today: ${guessesToday}.`);
+
+      const allScores = [scoreSystem,scoreAge,scoreEpi,scoreEti,scoreFind,scoreMgmt,scoreCourse];
+      const solved = allScores.every(s=>s>=0.8);
+      if(solved){
+        handleSolved();
       }
     }
 
+    function handleSolved(){
+      showStatus(`🎉 Correct! You solved today's diagnosis in ${guessesToday} guesses. Come back tomorrow for a new case.`);
+      updateStatsOnSolve();
+    }
+
+    // ---------- Guess submission ----------
+
+    function addGuess(input){
+      if(!TARGET){
+        showStatus('No active case. Please reload the page.');
+        return;
+      }
+      let key = normalizeToken(input);
+      if(!key){
+        return;
+      }
+      const row = BY_NAME.get(key);
+      if(!row){
+        showStatus('Diagnosis not found in dataset. Try another term.');
+        return;
+      }
+      const canonical = row.diagnosis;
+      if(GUESSED.has(canonical)){
+        showStatus('You already tried that diagnosis. Choose another one.');
+        return;
+      }
+      GUESSED.add(canonical);
+      guessesToday++;
+      renderRow(row);
+    }
+
+    // ---------- DOM wiring ----------
+
     const guessInput=document.getElementById('guess');
     const guessBtn=document.getElementById('guessBtn');
-    function submitGuess(){ addGuess(guessInput.value); guessInput.value=''; guessInput.focus(); }
+
+    function submitGuess(){
+      addGuess(guessInput.value);
+      guessInput.value='';
+      guessInput.focus();
+    }
+
     guessBtn.addEventListener('click', submitGuess);
     guessInput.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); submitGuess(); }});
-    document.getElementById('resetBtn').addEventListener('click', ()=>{ pickRandom(); resetGame(); });
 
     const toggleBtn = document.getElementById('toggleInstructions');
     const panel = document.getElementById('instructionsPanel');
@@ -428,9 +692,13 @@ Anemia (Iron Deficiency),,hematology,child; young adult; middle adult; older adu
       });
     }
 
+    // ---------- Init ----------
+
     const rows = parseCSV(CSV_30);
     loadDataset(rows);
-    pickRandom();
+    loadStats();
+    startDailyGame();
+  })();
   </script>
 </body>
 </html>
