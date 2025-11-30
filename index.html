@@ -33,7 +33,7 @@
 
     input[type="text"]{
       width:100%;
-      max-width:320px;
+      max-width:320px;       /* shorten the diagnosis box */
       background:#ffffff;
       color:#0b1220;
       border:1px solid #dce1eb;
@@ -53,15 +53,15 @@
     }
     button:disabled{opacity:.5; cursor:not-allowed}
 
-    .chips{display:flex; flex-wrap:wrap; gap:5px}
+    .chips{display:flex; flex-wrap:wrap; gap:6px}
     .chip{
       background:var(--chip);
       border:1px solid var(--chip-b);
-      padding:3px 7px;        /* slightly denser */
+      padding:4px 8px;
       border-radius:999px;
-      font-size:10.5px;       /* slightly smaller */
+      font-size:11px;
       display:inline-block;
-      margin:3px 3px 3px 0;
+      margin:4px 4px 4px 0;
     }
     .chip.green{ background:rgba(21,163,119,.14); border-color:rgba(21,163,119,.35); }
     .chip.amber{ background:rgba(234,179,8,.18); border-color:rgba(234,179,8,.45); }
@@ -81,19 +81,19 @@
 
     .legend{
       display:flex;
-      gap:10px;
+      gap:12px;
       align-items:center;
       color:var(--muted);
-      font-size:12px;        /* a bit tighter */
+      font-size:13px;
       flex-wrap:wrap;
-      margin-top:6px;
+      margin-top:8px;
     }
     .swatch{
       width:14px;
       height:14px;
       border-radius:4px;
       display:inline-block;
-      margin-right:4px;
+      margin-right:6px;
     }
     .swatch.g{background:var(--green)}
     .swatch.y{background:var(--amber)}
@@ -104,8 +104,7 @@
     .colwrap{overflow:auto; margin-top:8px;}
 
     .progress-bar{
-      margin-top:12px;        /* more space from input */
-      margin-bottom:8px;      /* space before legend */
+      margin-top:8px;
       width:100%;
       max-width:100%;
       height:14px;
@@ -147,11 +146,6 @@
       background:#ffffff;
       box-shadow:0 4px 12px rgba(15,23,42,0.06);
       margin-top:8px;
-      transition:border-color .15s ease, background-color .15s ease;
-    }
-    .guess-card.latest-card{
-      background:#f7f9ff;           /* highlight latest guess */
-      border-color:#cbd5ff;
     }
     .guess-card-header{
       font-weight:600;
@@ -175,7 +169,7 @@
     }
 
     /* Show cards instead of table on narrow screens */
-     @media (max-width: 768px){
+    @media (max-width: 768px){
       .colwrap{ display:none; }
       .cards{ display:block; }
     }
@@ -243,9 +237,9 @@
       </div>
 
       <div class="legend">
-        <span><span class="swatch g"></span>Green = exact</span>
-        <span><span class="swatch y"></span>Yellow = near</span>
-        <span><span class="swatch o"></span>Orange = partial</span>
+        <span><span class="swatch g"></span>Green = exact/very close</span>
+        <span><span class="swatch y"></span>Yellow = close near-miss</span>
+        <span><span class="swatch o"></span>Orange = partial overlap</span>
         <span><span class="swatch r"></span>Red = different</span>
       </div>
 
@@ -589,7 +583,7 @@ Anemia (Iron Deficiency),,hematology,young adult,menorrhagia; low iron intake; c
         else{
           const m=RELATEDNESS[domain]||{};
           if(m[token]&&m[token][tb]!=null) best=Math.max(best,m[token][tb]);
-          if(m[tb]&&m[tokn]!=null) best=Math.max(best,m[tb][token]);
+          if(m[tb]&&m[tb][token]!=null) best=Math.max(best,m[tb][token]);
         }
       });
       return best;
@@ -768,7 +762,7 @@ Anemia (Iron Deficiency),,hematology,young adult,menorrhagia; low iron intake; c
       const cards = document.getElementById('cardsContainer');
       if(cards){
         const card = document.createElement('div');
-        card.className = 'guess-card latest-card';
+        card.className = 'guess-card';
         card.innerHTML = `
           <div class="guess-card-header">${escapeHtml(title(guess.diagnosis))}</div>
           <div class="guess-card-row">
@@ -799,9 +793,7 @@ Anemia (Iron Deficiency),,hematology,young adult,menorrhagia; low iron intake; c
             <div class="guess-card-label">Course</div>
             <div class="guess-card-value">${renderTokenChips('course', [guess.course].filter(Boolean), [t.course].filter(Boolean))}</div>
           </div>`;
-        // remove highlight from previous latest, then prepend
         if(cards.firstChild){
-          cards.firstChild.classList.remove('latest-card');
           cards.insertBefore(card, cards.firstChild);
         }else{
           cards.appendChild(card);
