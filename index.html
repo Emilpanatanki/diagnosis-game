@@ -2,7 +2,8 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport"
+        content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
   <title>Guess the Diagnosis...🤔</title>
   <style>
     button{transition:transform .12s ease, box-shadow .12s ease;}
@@ -38,6 +39,7 @@
       border:1px solid #dce1eb;
       border-radius:10px;
       padding:10px 12px;
+      font-size:16px;        /* prevents iOS zoom-on-focus */
     }
     button{
       background:var(--accent);
@@ -283,55 +285,55 @@
     const CSV_30 = `Diagnosis,Aliases,System,AgeGroup,Epidemiology,Etiology,Onset,KeyFindings,Investigation,Management,SeverityRisk
 Myocardial Infarction,Heart attack; MI,cardiovascular,older adult (65+),male; smoker; atherosclerosis; DM,vascular; thrombotic,acute,chest pain; dyspnea; diaphoresis,ecg; troponin,antiplatelets; anticoagulation; reperfusion,high
 Pneumonia,Lower respiratory tract infection,respiratory,older adult (65+),winter; aspiration; nursing home,infection,acute,fever; cough; dyspnea; sputum,cxr,antibiotics; supportive,moderate
-Asthma,Bronchial asthma,respiratory,child,atopy; FHx,inflammatory,acute; recurrent; episodic,wheeze; cough; dyspnea,spirometry,bronchodilators; inhaled steroids,low
+Asthma,Bronchial asthma,respiratory,child,atopy; FHx,inflammatory,acute; recurrent; episodic,wheeze; cough; dyspnea,spirometry,bronchodilators; steroids,low
 Stroke,Cerebrovascular accident; CVA,neurology,older adult (65+),HTN; AF,vascular; thrombotic,acute,weakness focal; facial droop; confusion,ct; mri,reperfusion; antiplatelets; anticoagulation,high
 Appendicitis,,gastrointestinal,young adult,appendiceal obstruction,obstructive; infection,acute,RLQ pain; fever; nausea vomiting,clinical; ultrasound,appendectomy,moderate
 Diabetic Ketoacidosis,DKA,endocrine,adolescent,T1DM; insulin omission; infection,metabolic,acute,polyuria; polydipsia; dehydration; nausea vomiting,blood glucose; ketones; abg,iv fluids; insulin; electrolytes,high
-Cholelithiasis,Gallstones,gastrointestinal,middle adult,female; obesity; fatty meals; pregnancy,obstructive,variable,RUQ pain; nausea,ultrasound,analgesia; elective cholecystectomy,low
+Cholelithiasis,Gallstones,gastrointestinal,middle adult,female; obesity; fatty meals; pregnancy,obstructive,variable,RUQ pain; nausea,ultrasound,analgesia; cholecystectomy,low
 Tuberculosis,TB,respiratory,young adult,close contact; high-prevalence area,infection,chronic,cough; weight loss; night sweats; fever,sputum smear; cxr,anti-TB therapy,moderate
 Hypertension,High blood pressure,cardiovascular,middle adult,FHx; obesity; high salt,genetic; idiopathic,chronic,headache; often asymptomatic,BP measurement,lifestyle; antihypertensives,moderate
-Chronic Obstructive Pulmonary Disease,COPD,respiratory,older adult (65+),smoker; occupational exposure,inflammatory; obstructive,chronic,dyspnea; cough; sputum,spirometry,bronchodilators; inhaled steroids; smoking cessation,moderate
-Gastroesophageal Reflux Disease,GERD,gastrointestinal,middle adult,obesity; late meals; hiatal hernia,functional,chronic,heartburn; regurgitation; chest pain,pH monitoring; endoscopy,PPI therapy; lifestyle,low
-Migraine,,neurology,young adult,female; FHx,idiopathic,recurrent; episodic,headache; photophobia; nausea vomiting,clinical,analgesics; migraine prophylaxis,low
+Chronic Obstructive Pulmonary Disease,COPD,respiratory,older adult (65+),smoker; occupational exposure,inflammatory; obstructive,chronic,dyspnea; cough; sputum,spirometry,bronchodilators; steroids; smoking cessation,moderate
+Gastroesophageal Reflux Disease,GERD,gastrointestinal,middle adult,obesity; late meals; hiatal hernia,functional,chronic,heartburn; regurgitation; chest pain,pH monitoring; endoscopy,PPI; lifestyle,low
+Migraine,,neurology,young adult,female; FHx,idiopathic,recurrent; episodic,headache; photophobia; nausea vomiting,clinical,analgesics; prophylaxis,low
 Depression,Major depressive disorder,psychiatry,young adult,prior episode; psychosocial stressors,idiopathic; genetic,chronic; episodic,low mood; anhedonia; fatigue,clinical,antidepressants; psychotherapy,moderate
 Anxiety Disorder,Generalized anxiety disorder,psychiatry,young adult,chronic worry; stress,idiopathic,chronic,restlessness; insomnia; fatigue,clinical,anxiolytics; psychotherapy,low
 Bipolar Disorder,Manic depression,psychiatry,young adult,FHx mood disorder,idiopathic; genetic,episodic,mood swings; ↓ sleep need,clinical,mood stabilizers; antipsychotics,moderate
 Peptic Ulcer Disease,PUD,gastrointestinal,middle adult,NSAIDs; H. pylori,infection,chronic; recurrent,epigastric pain; nausea,endoscopy,PPI; H. pylori eradication,low
 Viral Hepatitis B,Hep B,gastrointestinal,young adult,unvaccinated; blood exposure; sexual exposure,infection,acute; chronic,jaundice; fatigue; nausea,HbsAg; LFTs,antivirals; supportive,moderate
-Viral Hepatitis C,Hep C,gastrointestinal,middle adult,IVDU; past transfusion,infection,chronic,fatigue; often asymptomatic,HCV Ab; HCV RNA,direct-acting antivirals,moderate
-HIV/AIDS,Human immunodeficiency virus infection,immunology,young adult,unprotected sex; IVDU,infection,chronic,weight loss; fever; opportunistic infections,HIV Ab/Ag; HIV RNA,ART; OI prophylaxis,high
+Viral Hepatitis C,Hep C,gastrointestinal,middle adult,IVDU; past transfusion,infection,chronic,fatigue; often asymptomatic,HCV Ab; HCV RNA,antivirals,moderate
+HIV/AIDS,Human immunodeficiency virus infection,immunology,young adult,unprotected sex; IVDU,infection,chronic,weight loss; fever; opportunistic infections,HIV Ab/Ag; HIV RNA,ART; prophylaxis,high
 Sepsis,Septicemia,immunology,older adult (65+),hospitalized; invasive devices,infection,acute,fever; hypotension; tachycardia,blood cultures; lactate,iv antibiotics; iv fluids; vasopressors,high
 Urinary Tract Infection,UTI,genitourinary,young adult,sexually active F; prior UTI,infection,acute,dysuria; frequency; suprapubic pain,urinalysis; urine culture,oral antibiotics; analgesia,low
-Pyelonephritis,,genitourinary,young adult,F; ascending UTI,infection,acute,fever; flank pain; nausea vomiting,urinalysis; urine culture,iv/ oral antibiotics; fluids,moderate
-Nephrolithiasis,Kidney stones,genitourinary,young adult,dehydration; prior stones,metabolic; obstructive,acute; recurrent,flank pain; hematuria,ct,analgesia; hydration; stone removal,moderate
-Chronic Kidney Disease,CKD,genitourinary,older adult (65+),long-standing DM; long-standing HTN,metabolic,chronic,fatigue; edema; pruritus,eGFR; creatinine; urine ACR,BP control; dialysis; nephroprotective meds,high
-Otitis Media,,ent,infant,daycare; recent URTI,infection,acute,ear pain; fever; irritability,otoscopy,analgesia; ±antibiotics,low
+Pyelonephritis,,genitourinary,young adult,F; ascending UTI,infection,acute,fever; flank pain; nausea vomiting,urinalysis; urine culture,iv antibiotics; fluids,moderate
+Nephrolithiasis,Kidney stones,genitourinary,young adult,dehydration; prior stones,metabolic; obstructive,acute; recurrent,flank pain; hematuria,ct,analgesia; hydration; removal,moderate
+Chronic Kidney Disease,CKD,genitourinary,older adult (65+),long-standing DM; long-standing HTN,metabolic,chronic,fatigue; edema; pruritus,eGFR; creatinine; urine ACR,BP control; dialysis; nephroprotective,high
+Otitis Media,,ent,infant,daycare; recent URTI,infection,acute,ear pain; fever; irritability,otoscopy,analgesia; antibiotics,low
 Otitis Externa,Swimmer's ear,ent,adolescent,swimmer; local trauma,infection,acute,ear pain; discharge,otoscopy,topical antibiotics; ear drops,low
-Sinusitis,Rhinosinusitis,ent,young adult,post-upper RTI; allergic rhinitis,infection,acute,facial pain; nasal congestion; headache,clinical,IN steroids; decongestants; ±antibiotics,low
-Tonsillitis,Pharyngitis,ent,adolescent,winter; close contact,infection,acute,sore throat; fever; dysphagia,throat swab,analgesia; antibiotics if bacterial,low
-Conjunctivitis,Pink eye,ophthalmology,young adult,contact; viral/ bacterial,infection,acute,red eye; discharge,clinical,topical antibiotics or supportive,low
-Glaucoma,,ophthalmology,older adult (65+),↑ IOP; FHx,degenerative,chronic,peripheral vision loss; headache,tonometry,IOP-lowering drops; ±surgery,moderate
-Cataract,,ophthalmology,older adult (65+),lens degeneration,degenerative,chronic,blurred vision; glare,slit-lamp exam,cataract surgery,low
-Retinal Detachment,,ophthalmology,middle adult,myopia; eye trauma; prior surgery,degenerative,acute,flashes; floaters; shadow in vision,fundoscopy,urgent retinal surgery,high
-Epilepsy,Seizure disorder,neurology,young adult,idiopathic; prior brain injury,idiopathic,chronic; recurrent,seizure; postictal confusion,EEG,antiepileptic drugs,moderate
-Multiple Sclerosis,MS,neurology,young adult,F; temperate climate,autoimmune,chronic,vision blur; focal weakness; numbness,MRI; CSF,DMT; relapse steroids,moderate
-Parkinson's Disease,,neurology,older adult (65+),male; idiopathic,degenerative,chronic,tremor; rigidity; bradykinesia,clinical,dopaminergic therapy; supportive,moderate
-Alzheimer's Disease,,neurology,older adult (65+),degenerative; FHx,degenerative,chronic,memory loss; confusion,clinical; neuropsych,cognitive enhancers; supportive,high
+Sinusitis,Rhinosinusitis,ent,young adult,post-upper RTI; allergic rhinitis,infection,acute,facial pain; nasal congestion; headache,clinical,steroids; decongestants; antibiotics,low
+Tonsillitis,Pharyngitis,ent,adolescent,winter; close contact,infection,acute,sore throat; fever; dysphagia,throat swab,analgesia; antibiotics,low
+Conjunctivitis,Pink eye,ophthalmology,young adult,contact; viral; bacterial,infection,acute,red eye; discharge,clinical,topical antibiotics; supportive,low
+Glaucoma,,ophthalmology,older adult (65+),↑ IOP; FHx,degenerative,chronic,peripheral vision loss; headache,tonometry,drops; surgery,moderate
+Cataract,,ophthalmology,older adult (65+),lens degeneration,degenerative,chronic,blurred vision; glare,slit-lamp exam,surgery,low
+Retinal Detachment,,ophthalmology,middle adult,myopia; eye trauma; prior surgery,degenerative,acute,flashes; floaters; shadow in vision,fundoscopy,surgery,high
+Epilepsy,Seizure disorder,neurology,young adult,idiopathic; prior brain injury,idiopathic,chronic; recurrent,seizure; postictal confusion,EEG,antiepileptics,moderate
+Multiple Sclerosis,MS,neurology,young adult,F; temperate climate,autoimmune,chronic,vision blur; focal weakness; numbness,MRI; CSF,steroids; immunotherapy,moderate
+Parkinson's Disease,,neurology,older adult (65+),male; idiopathic,degenerative,chronic,tremor; rigidity; bradykinesia,clinical,dopaminergic; supportive,moderate
+Alzheimer's Disease,,neurology,older adult (65+),degenerative; FHx,degenerative,chronic,memory loss; confusion,clinical; neuropsych,cognitive drugs; supportive,high
 Meningitis,,neurology,child,unvaccinated; close living,infection,acute,fever; neck stiffness; headache,LP,iv antibiotics; supportive,high
-Encephalitis,,neurology,young adult,viral; seasonal exposure,infection; inflammatory,acute,fever; confusion; seizure,MRI; CSF,antivirals (if indicated); supportive,high
+Encephalitis,,neurology,young adult,viral; seasonal exposure,infection; inflammatory,acute,fever; confusion; seizure,MRI; CSF,antivirals; supportive,high
 Herpes Zoster,Shingles,dermatology,older adult (65+),reactivation VZV,infection,acute,vesicular rash; dermatomal pain,clinical,antivirals; analgesia,mixed
-Cellulitis,,dermatology,middle adult,skin break; chronic edema,infection,acute,fever; erythema; warmth,clinical,systemic antibiotics; limb elevation,low
-Psoriasis,,dermatology,young adult,FHx; chronic inflammatory skin dz,inflammatory,chronic,scaly plaques; pruritus,clinical,topical steroids; immunomodulators,low
-Eczema,Atopic dermatitis,dermatology,infant,atopy; FHx,inflammatory,chronic,pruritus; dry patches,clinical,emollients; topical steroids,low
-Acne Vulgaris,Acne,dermatology,adolescent,puberty; ↑ sebum,inflammatory,chronic; recurrent,papules; pustules; comedones,clinical,topical retinoids; antibiotics; hygiene,low
-Melanoma,,dermatology,middle adult,fair skin; intense sun,neoplastic,chronic,irregular lesion; color change,biopsy,surgical excision; oncology referral,high
-Basal Cell Carcinoma,BCC,dermatology,older adult (65+),chronic sun,neoplastic,chronic,pearly papule; ulcer,biopsy,local excision; destructive therapy,low
-Squamous Cell Carcinoma,SCC,dermatology,older adult (65+),sun; IS,neoplastic,chronic,ulcerated nodule; scale,biopsy,surgical excision; ±radiotherapy,moderate
+Cellulitis,,dermatology,middle adult,skin break; chronic edema,infection,acute,fever; erythema; warmth,clinical,antibiotics; elevation,low
+Psoriasis,,dermatology,young adult,FHx,inflammatory,chronic,scaly plaques; pruritus,clinical,steroids; immunomodulators,low
+Eczema,Atopic dermatitis,dermatology,infant,atopy; FHx,inflammatory,chronic,pruritus; dry patches,clinical,emollients; steroids,low
+Acne Vulgaris,Acne,dermatology,adolescent,puberty; ↑ sebum,inflammatory,chronic; recurrent,papules; pustules; comedones,clinical,retinoids; antibiotics; hygiene,low
+Melanoma,,dermatology,middle adult,fair skin; intense sun,neoplastic,chronic,irregular lesion; color change,biopsy,excision; oncology,high
+Basal Cell Carcinoma,BCC,dermatology,older adult (65+),chronic sun,neoplastic,chronic,pearly papule; ulcer,biopsy,excision; local therapy,low
+Squamous Cell Carcinoma,SCC,dermatology,older adult (65+),sun; immunosuppression,neoplastic,chronic,ulcerated nodule; scale,biopsy,excision; radiotherapy,moderate
 Rheumatoid Arthritis,RA,rheumatology,middle adult,F; autoimmune,autoimmune,chronic,arthralgia; joint swelling; morning stiffness,RF; anti-CCP; ESR/CRP,DMARDs; NSAIDs; steroids,moderate
-Osteoarthritis,,rheumatology,older adult (65+),wear-and-tear; obesity,degenerative,chronic,arthralgia; worse with use; brief stiffness,x-ray,analgesia; physio; joint replacement,low
+Osteoarthritis,,rheumatology,older adult (65+),wear-and-tear; obesity,degenerative,chronic,arthralgia; worse with use; brief stiffness,x-ray,analgesia; physio; replacement,low
 Gout,,rheumatology,middle adult,M; hyperuricemia; alcohol,metabolic,acute; recurrent,joint swelling; severe pain (1st MTP),uric acid; joint aspiration,NSAIDs; colchicine; urate-lowering,low
 Systemic Lupus Erythematosus,SLE,rheumatology,young adult,F; autoimmune; multisystem,autoimmune,chronic,malar rash; arthralgia; fatigue,ANA; anti-dsDNA,immunosuppressants; steroids,mixed
-Anemia (Iron Deficiency),,hematology,young adult,menorrhagia; low iron intake; chronic blood loss,deficiency,chronic,fatigue; pallor; dyspnea on exertion,CBC; ferritin,oral iron; treat cause,low`;
+Anemia (Iron Deficiency),,hematology,young adult,menorrhagia; low iron intake; chronic blood loss,deficiency,chronic,fatigue; pallor; dyspnea on exertion,CBC; ferritin,iron; treat cause,low`;
 
     const VIGNETTES = {
       'myocardial infarction': 'A 60 year old male presents with chest pain.',
@@ -791,7 +793,6 @@ Anemia (Iron Deficiency),,hematology,young adult,menorrhagia; low iron intake; c
             <div class="guess-card-label">Course</div>
             <div class="guess-card-value">${renderTokenChips('course', [guess.course].filter(Boolean), [t.course].filter(Boolean))}</div>
           </div>`;
-        // Prepend (newest first)
         if(cards.firstChild){
           cards.insertBefore(card, cards.firstChild);
         }else{
@@ -829,7 +830,7 @@ Anemia (Iron Deficiency),,hematology,young adult,menorrhagia; low iron intake; c
       if(overlay){
         overlay.classList.add('is-open');
       }
-      showStatus(''); // clear inline banner when solved
+      showStatus('');
     }
 
     function addGuess(input){
