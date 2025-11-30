@@ -268,4 +268,519 @@ Psoriasis,,dermatology,young adult,FHx; chronic inflammatory skin dz,inflammator
 Eczema,Atopic dermatitis,dermatology,infant,atopy; FHx,inflammatory,chronic,pruritus; dry patches,clinical,emollients; topical steroids,low
 Acne Vulgaris,Acne,dermatology,adolescent,puberty; ↑ sebum,inflammatory,chronic; recurrent,papules; pustules; comedones,clinical,topical retinoids; antibiotics; hygiene,low
 Melanoma,,dermatology,middle adult,fair skin; intense sun,neoplastic,chronic,irregular lesion; color change,biopsy,surgical excision; oncology referral,high
-Basal Cell Carcinoma,BCC,dermatology,older adult (65+),chronic sun,neoplastic,chronic,pearly papule; ulcer,biopsy,local excision; dest
+Basal Cell Carcinoma,BCC,dermatology,older adult (65+),chronic sun,neoplastic,chronic,pearly papule; ulcer,biopsy,local excision; destructive therapy,low
+Squamous Cell Carcinoma,SCC,dermatology,older adult (65+),sun; IS,neoplastic,chronic,ulcerated nodule; scale,biopsy,surgical excision; ±radiotherapy,moderate
+Rheumatoid Arthritis,RA,rheumatology,middle adult,young–middle F; autoimmune,autoimmune,chronic,arthralgia; joint swelling; morning stiffness,RF; anti-CCP; ESR/CRP,DMARDs; NSAIDs; steroids,moderate
+Osteoarthritis,,rheumatology,older adult (65+),age; joint overuse; obesity,degenerative,chronic,arthralgia; worse with use; brief stiffness,x-ray,analgesia; physio; joint replacement,low
+Gout,,rheumatology,middle adult,middle-aged M; hyperuricemia; alcohol,metabolic,acute; recurrent,joint swelling; severe pain (1st MTP),uric acid; joint aspiration,NSAIDs; colchicine; urate-lowering,low
+Systemic Lupus Erythematosus,SLE,rheumatology,young adult,young F; autoimmune; multisystem,autoimmune,chronic,malar rash; arthralgia; fatigue,ANA; anti-dsDNA,immunosuppressants; steroids,mixed
+Anemia (Iron Deficiency),,hematology,young adult,menorrhagia; low iron intake; chronic blood loss,deficiency,chronic,fatigue; pallor; dyspnea on exertion,CBC; ferritin,oral iron; treat cause,low`;
+
+    // Abstract strict vignettes
+    const VIGNETTES = {
+      'myocardial infarction': 'A 60 year old male presents with chest pain.',
+      'pneumonia': 'A 72 year old female presents with fever and cough.',
+      'asthma': 'A 16 year old male presents with shortness of breath.',
+      'stroke': 'A 71 year old female presents with sudden weakness on one side.',
+      'appendicitis': 'A 21 year old male presents with stomach pain.',
+      'diabetic ketoacidosis': 'A 19 year old female presents feeling very unwell.',
+      'cholelithiasis': 'A 42 year old female presents with upper stomach pain.',
+      'tuberculosis': 'A 28 year old female presents with a long-lasting cough.',
+      'hypertension': 'A 55 year old female presents with high blood pressure.',
+      'chronic obstructive pulmonary disease': 'A 67 year old male presents with breathlessness on exertion.',
+      'gastroesophageal reflux disease': 'A 35 year old male presents with burning chest pain after meals.',
+      'migraine': 'A 25 year old male presents with recurring headaches.',
+      'depression': 'A 31 year old female presents with low mood.',
+      'anxiety disorder': 'A 23 year old male presents feeling constantly anxious.',
+      'bipolar disorder': 'A 26 year old male presents with changes in mood.',
+      'peptic ulcer disease': 'A 48 year old female presents with upper stomach pain.',
+      'viral hepatitis b': 'A 32 year old male presents with tiredness.',
+      'viral hepatitis c': 'A 58 year old female presents with ongoing fatigue.',
+      'hiv/aids': 'A 33 year old male presents with weight loss.',
+      'sepsis': 'An 80 year old female presents feeling acutely unwell with fever.',
+      'urinary tract infection': 'A 26 year old female presents with painful urination.',
+      'pyelonephritis': 'A 40 year old female presents with pain in the side and fever.',
+      'nephrolithiasis': 'A 34 year old female presents with severe lower back pain.',
+      'chronic kidney disease': 'A 70 year old male presents with tiredness and swollen ankles.',
+      'otitis media': 'A 3 year old male presents with ear pain and fever.',
+      'otitis externa': 'A 14 year old female presents with ear pain.',
+      'sinusitis': 'A 30 year old female presents with a blocked nose.',
+      'tonsillitis': 'A 17 year old female presents with a sore throat.',
+      'conjunctivitis': 'A 22 year old female presents with a red eye.',
+      'glaucoma': 'A 68 year old male presents with gradual changes in vision.',
+      'cataract': 'A 74 year old female presents with slowly worsening vision.',
+      'retinal detachment': 'A 56 year old male presents with a new shadow in his vision.',
+      'epilepsy': 'A 20 year old female presents with repeated episodes of lost awareness.',
+      'multiple sclerosis': 'A 27 year old female presents with intermittent weakness.',
+      "parkinson's disease": 'A 73 year old male presents with a shaking hand.',
+      "alzheimer's disease": 'A 79 year old female presents with memory problems.',
+      'meningitis': 'A 6 year old male presents with fever and headache.',
+      'encephalitis': 'A 19 year old female presents with fever and confusion.',
+      'herpes zoster': 'A 64 year old female presents with a painful skin area.',
+      'cellulitis': 'A 52 year old male presents with a red, warm area on the leg.',
+      'psoriasis': 'A 30 year old male presents with scaly skin patches.',
+      'eczema': 'A 5 year old female presents with itchy dry skin.',
+      'acne vulgaris': 'A 16 year old female presents with spots on the face.',
+      'melanoma': 'A 45 year old male presents with a changing mole.',
+      'basal cell carcinoma': 'A 62 year old female presents with a small skin bump.',
+      'squamous cell carcinoma': 'A 70 year old male presents with a rough skin patch.',
+      'rheumatoid arthritis': 'A 38 year old female presents with painful hands in the morning.',
+      'osteoarthritis': 'A 68 year old female presents with painful knees when walking.',
+      'gout': 'A 47 year old male presents with sudden pain in the big toe.',
+      'systemic lupus erythematosus': 'A 29 year old female presents with joint pain and tiredness.',
+      'anemia (iron deficiency)': 'A 24 year old female presents with feeling very tired.'
+    };
+
+    const RELATEDNESS={
+      system:{ 'ent':{'respiratory':0.6} },
+      etiology:{ 'infection':{'inflammatory':0.5,'autoimmune':0.25}, 'autoimmune':{'inflammatory':0.6}, 'vascular':{'thrombotic':0.7}, 'unknown':{} },
+      management:{ 'medication':{'mixed':0.7,'supportive care':0.4}, 'surgery':{'mixed':0.6}, 'antivirals':{'medication':0.5} },
+      course:{ 'acute':{'subacute':0.6,'episodic':0.5}, 'chronic':{'recurrent':0.55,'variable':0.4} },
+      age:{}
+    };
+
+    const AGE_ORDER = [
+      'neonate (0-28d)','infant','toddler','child','adolescent','young adult','middle adult','older adult (65+)'
+    ];
+    const AGE_ALIASES = {
+      'children':['child'],
+      'young adults':['young adult'],
+      'adults':['young adult','middle adult','older adult (65+)'],
+      'elderly':['older adult (65+)'],
+      'adults/elderly':['middle adult','older adult (65+)'],
+      'children/young adults':['child','adolescent','young adult']
+    };
+    const AGE_INDEX = new Map(AGE_ORDER.map((v,i)=>[v,i]));
+
+    // Weighted scoring
+    const WEIGHTS = {
+      system: 1.5,
+      age: 1.2,
+      epi: 1.2,
+      etiology: 1.0,
+      findings: 1.5,
+      management: 0.9,
+      course: 0.7
+    };
+    const TOTAL_WEIGHT =
+      WEIGHTS.system + WEIGHTS.age + WEIGHTS.epi +
+      WEIGHTS.etiology + WEIGHTS.findings +
+      WEIGHTS.management + WEIGHTS.course;
+
+    let DATA=[];
+    let BY_NAME=new Map();
+    let TARGET=null;
+    let GUESSED=new Set();
+    let bestScoreSoFar=0;
+    let guessesToday=0;
+    let solvedToday=false;
+
+    // ---------- Utility / parsing ----------
+
+    function normalizeToken(s){ return (s||'').toString().trim().toLowerCase(); }
+
+    function splitTags(s){
+      if(!s) return [];
+      const normalized = s.replace(/[,/|]/g,';').replace(/\s*;\s*/g,';').toLowerCase();
+      return normalized.split(';').map(t=>t.trim()).filter(Boolean);
+    }
+
+    function parseCSV(text){
+      const lines = text.replace(/\r/g,'').split('\n').filter(l=>l.trim().length>0);
+      if(lines.length===0) return [];
+      function parseLine(line){
+        const cells=[]; let cur=''; let inQ=false;
+        for(let i=0;i<line.length;i++){
+          const ch=line[i];
+          if(inQ){
+            if(ch==='"' && line[i+1]==='"'){ cur+='"'; i++; }
+            else if(ch==='"'){ inQ=false; }
+            else { cur+=ch; }
+          }else{
+            if(ch===','){ cells.push(cur.trim()); cur=''; }
+            else if(ch==='"'){ inQ=true; }
+            else { cur+=ch; }
+          }
+        }
+        cells.push(cur.trim());
+        return cells;
+      }
+      const headers = parseLine(lines[0]).map(h=>h.trim());
+      return lines.slice(1).map(line=>{
+        const cells = parseLine(line);
+        const obj={}; headers.forEach((h,i)=>{ obj[h]=cells[i]?cells[i].trim():''; });
+        return obj;
+      });
+    }
+
+    function expandAgeTokens(tokens){
+      const out=[]; const seen=new Set();
+      tokens.forEach(t=>{
+        const mapped = AGE_ALIASES[t] || [t];
+        mapped.forEach(x=>{ if(!seen.has(x)){ seen.add(x); out.push(x); } });
+      });
+      return out;
+    }
+
+    function ageTokenSim(a,b){
+      if(a===b) return 1;
+      const ia = AGE_INDEX.has(a)?AGE_INDEX.get(a):null;
+      const ib = AGE_INDEX.has(b)?AGE_INDEX.get(b):null;
+      if(ia==null||ib==null) return 0;
+      const d=Math.abs(ia-ib);
+      if(d===1) return 0.75;
+      if(d===2) return 0.55;
+      return 0.25;
+    }
+
+    function relScore(domain,a,b){
+      a=normalizeToken(a); b=normalizeToken(b);
+      if(!a||!b) return 0;
+      if(a===b) return 1;
+      const m=RELATEDNESS[domain]||{};
+      if(m[a]&&m[a][b]!=null) return m[a][b];
+      if(m[b]&&m[b][a]!=null) return m[b][a];
+      if(domain==='age' && (a==='all ages'||b==='all ages')) return 0.5;
+      return 0;
+    }
+
+    function jaccard(aSet,bSet){
+      if(aSet.length===0 && bSet.length===0) return 1;
+      const A=new Set(aSet), B=new Set(bSet);
+      let inter=0; A.forEach(x=>{ if(B.has(x)) inter++; });
+      const uni=new Set([...A,...B]).size;
+      return uni? inter/uni : 0;
+    }
+
+    function setRelatedness(domain,aSet,bSet){
+      if(aSet.length===0 && bSet.length===0) return 1;
+      function bestSum(X,Y){
+        if(X.length===0||Y.length===0) return 0;
+        let sum=0; X.forEach(x=>{
+          let best=0; Y.forEach(y=>{ best=Math.max(best, relScore(domain,x,y)); });
+          sum+=best;
+        });
+        return sum/ X.length;
+      }
+      const ab=bestSum(aSet,bSet), ba=bestSum(bSet,aSet);
+      return (ab+ba)/2;
+    }
+
+    function ageSimilarity(aSet,bSet){
+      const g=expandAgeTokens(aSet), t=expandAgeTokens(bSet);
+      if(g.length===0 && t.length===0) return 1;
+      if(g.length===0 || t.length===0) return 0;
+      function avgBest(X,Y){
+        let s=0;
+        X.forEach(x=>{
+          let best=0;
+          Y.forEach(y=>{ best=Math.max(best, ageTokenSim(x,y)); });
+          s+=best;
+        });
+        return s/X.length;
+      }
+      return (avgBest(g,t)+avgBest(t,g))/2;
+    }
+
+    function systemSimilarity(a,b){ if(!a&&!b) return 1; if(!a||!b) return 0; if(a===b) return 1; return relScore('system',a,b); }
+    function etiologySimilarity(aSet,bSet){ return Math.max(jaccard(aSet,bSet), setRelatedness('etiology',aSet,bSet)); }
+    function managementSimilarity(aSet,bSet){ return Math.max(jaccard(aSet,bSet), setRelatedness('management',aSet,bSet)); }
+    function courseSimilarity(a,b){ if(!a&&!b) return 1; if(!a||!b) return 0; if(a===b) return 1; return relScore('course',a,b); }
+
+    function clsForScore(score){
+      if(score >= 0.85) return 'green';
+      if(score >= 0.70) return 'amber';
+      if(score >= 0.50) return 'orange';
+      return 'red';
+    }
+
+    function maxSimAgainst(token, targetTokens, domain){
+      if(domain==='age'){
+        const g = expandAgeTokens([token]);
+        const t = expandAgeTokens(targetTokens);
+        let best=0;
+        g.forEach(ga=>{
+          t.forEach(tb=>{ best=Math.max(best, ageTokenSim(ga,tb)); });
+        });
+        return best;
+      }
+      let best=0;
+      targetTokens.forEach(tb=>{
+        if(token===tb) best=Math.max(best,1);
+        else{
+          const m=RELATEDNESS[domain]||{};
+          if(m[token]&&m[token][tb]!=null) best=Math.max(best,m[token][tb]);
+          if(m[tb]&&m[tb][token]!=null) best=Math.max(best,m[tb][token]);
+        }
+      });
+      return best;
+    }
+
+    function renderTokenChips(domain, guessTokens, targetTokens){
+      const g = (domain==='age') ? expandAgeTokens(guessTokens) : guessTokens;
+      const t = (domain==='age') ? expandAgeTokens(targetTokens) : targetTokens;
+      const parts=[];
+      g.forEach(tok=>{
+        const s = maxSimAgainst(tok, t, domain);
+        const cls = clsForScore(s);
+        parts.push(`<span class="chip ${cls}" title="Similarity: ${(s*100).toFixed(0)}%"> ${escapeHtml(title(tok))}</span>`);
+      });
+      if(parts.length===0) return '<span class="muted">—</span>';
+      return parts.join(' ');
+    }
+
+    function normalizeRow(r){
+      return {
+        diagnosis: normalizeToken(r.Diagnosis||r.diagnosis),
+        aliases: splitTags(r.Aliases||r.aliases),
+        system: normalizeToken(r.System||r.system),
+        age: splitTags(r.AgeGroup||r.agegroup||r.age),
+        epidemiology: splitTags(r.Epidemiology||r.epidemiology),
+        etiology: splitTags(r.Etiology||r.etiology),
+        findings: splitTags(r.KeyFindings||r.keyfindings||r.findings),
+        management: splitTags(r.Management||r.management),
+        course: normalizeToken(r.Onset||r.onset||r.TypicalCourse||r.course||r.typicalcourse)
+      };
+    }
+
+    function loadDataset(rows){
+      DATA = rows.map(normalizeRow).filter(r=>r.diagnosis);
+      BY_NAME = new Map();
+      DATA.forEach(r=>{
+        BY_NAME.set(r.diagnosis, r);
+        r.aliases.forEach(a=>BY_NAME.set(a, r));
+      });
+      const dl=document.getElementById('diagnosisList');
+      dl.innerHTML = DATA.map(r=>`<option value="${escapeHtml(title(r.diagnosis))}"></option>`).join('') +
+                     DATA.flatMap(r=>r.aliases.map(a=>`<option value="${escapeHtml(title(a))}"></option>`)).join('');
+    }
+
+    function title(s){ return (s||'').split(' ').map(w=> w? (w[0].toUpperCase()+w.slice(1)) : '').join(' '); }
+
+    function escapeHtml(str){
+      return (str||'').replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
+    }
+
+    // ---------- Game state helpers ----------
+
+    function showStatus(msg){
+      const el = document.getElementById('statusMsg');
+      if(el) el.textContent = msg || '';
+    }
+
+    function updateProgress(score){
+      const bar = document.getElementById('progressInner');
+      if(!bar) return;
+      const pct = Math.round(score*100);
+      bar.style.width = pct + '%';
+      bar.setAttribute('aria-valuenow', String(pct));
+    }
+
+    function displayVignette(dx){
+      const vDiv = document.getElementById('vignetteText');
+      if(!vDiv) return;
+      const vign = VIGNETTES[dx.diagnosis] || 'A patient presents with a vague complaint.';
+      vDiv.textContent = vign;
+    }
+
+    function getTodayStr(){
+      return new Date().toISOString().slice(0,10);
+    }
+
+    function simpleHash(str){
+      let h = 0;
+      for(let i=0;i<str.length;i++){
+        h = ((h << 5) - h) + str.charCodeAt(i);
+        h |= 0;
+      }
+      return h >>> 0;
+    }
+
+    function pickDailyTarget(){
+      if(DATA.length===0) return;
+      const dateKey = getTodayStr();
+      const hash = simpleHash(dateKey);
+      const idx = hash % DATA.length;
+      TARGET = DATA[idx];
+      displayVignette(TARGET);
+    }
+
+    function resetGame(){
+      GUESSED = new Set();
+      const tbody = document.querySelector('#table tbody');
+      if(tbody) tbody.innerHTML='';
+      const guessInput = document.getElementById('guess');
+      const guessBtn = document.getElementById('guessBtn');
+      if(guessInput) guessInput.value='';
+      if(guessInput) guessInput.disabled = false;
+      if(guessBtn) guessBtn.disabled = false;
+      guessesToday = 0;
+      bestScoreSoFar = 0;
+      solvedToday = false;
+      updateProgress(0);
+      showStatus('');
+    }
+
+    function startDailyGame(){
+      pickDailyTarget();
+      resetGame();
+    }
+
+    function avgWeighted(scores){
+      const [scoreSystem,scoreAge,scoreEpi,scoreEti,scoreFind,scoreMgmt,scoreCourse] = scores;
+      const num =
+        scoreSystem * WEIGHTS.system +
+        scoreAge    * WEIGHTS.age +
+        scoreEpi    * WEIGHTS.epi +
+        scoreEti    * WEIGHTS.etiology +
+        scoreFind   * WEIGHTS.findings +
+        scoreMgmt   * WEIGHTS.management +
+        scoreCourse * WEIGHTS.course;
+      return num / TOTAL_WEIGHT;
+    }
+
+    // ---------- Rendering guesses ----------
+
+    function renderRow(guess){
+      const t=TARGET;
+      const scoreSystem = systemSimilarity(guess.system, t.system);
+      const scoreAge = ageSimilarity(guess.age, t.age);
+      const scoreEpi = jaccard(guess.epidemiology, t.epidemiology);
+      const scoreEti = etiologySimilarity(guess.etiology, t.etiology);
+      const scoreFind = jaccard(guess.findings, t.findings);
+      const scoreMgmt = managementSimilarity(guess.management, t.management);
+      const scoreCourse = courseSimilarity(guess.course, t.course);
+
+      const scoresArr = [scoreSystem,scoreAge,scoreEpi,scoreEti,scoreFind,scoreMgmt,scoreCourse];
+      const mean = avgWeighted(scoresArr);
+
+      if(mean > bestScoreSoFar){
+        bestScoreSoFar = mean;
+        updateProgress(bestScoreSoFar);
+      }
+
+      const tr=document.createElement('tr');
+      tr.innerHTML = `
+        <td><strong>${escapeHtml(title(guess.diagnosis))}</strong></td>
+        <td>${renderTokenChips('system', [guess.system].filter(Boolean), [t.system].filter(Boolean))}</td>
+        <td>${renderTokenChips('age', guess.age, t.age)}</td>
+        <td>${renderTokenChips('epidemiology', guess.epidemiology, t.epidemiology)}</td>
+        <td>${renderTokenChips('etiology', guess.etiology, t.etiology)}</td>
+        <td>${renderTokenChips('findings', guess.findings, t.findings)}</td>
+        <td>${renderTokenChips('management', guess.management, t.management)}</td>
+        <td>${renderTokenChips('course', [guess.course].filter(Boolean), [t.course].filter(Boolean))}</td>`;
+      document.querySelector('#table tbody').appendChild(tr);
+
+      const solved = scoresArr.every(s=>s>=0.8);
+      if(solved){
+        handleSolved();
+      }
+    }
+
+    function handleSolved(){
+      solvedToday = true;
+      const guessInput = document.getElementById('guess');
+      const guessBtn = document.getElementById('guessBtn');
+      if(guessInput) guessInput.disabled = true;
+      if(guessBtn) guessBtn.disabled = true;
+
+      const overlay = document.getElementById('solvedOverlay');
+      const textEl = document.getElementById('solvedText');
+      const dxEl = document.getElementById('solvedDx');
+      if(textEl){
+        textEl.textContent = `You solved today's case in ${guessesToday} attempts.`;
+      }
+      if(dxEl && TARGET){
+        dxEl.textContent = `Diagnosis: ${title(TARGET.diagnosis)}`;
+      }
+      if(overlay){
+        overlay.classList.add('is-open');
+      }
+    }
+
+    // ---------- Guess submission ----------
+
+    function addGuess(input){
+      if(!TARGET){
+        showStatus('No active case. Please reload the page.');
+        return;
+      }
+      if(solvedToday){
+        showStatus('You already solved today\'s case. Come back tomorrow for a new one.');
+        return;
+      }
+      let key = normalizeToken(input);
+      if(!key){
+        return;
+      }
+      const row = BY_NAME.get(key);
+      if(!row){
+        showStatus('Diagnosis not found in dataset. Try another term.');
+        return;
+      }
+      const canonical = row.diagnosis;
+      if(GUESSED.has(canonical)){
+        showStatus('You already tried that diagnosis. Choose another one.');
+        return;
+      }
+      GUESSED.add(canonical);
+      guessesToday++;
+      renderRow(row);
+    }
+
+    const guessInput=document.getElementById('guess');
+    const guessBtn=document.getElementById('guessBtn');
+
+    function submitGuess(){
+      addGuess(guessInput.value);
+      guessInput.value='';
+      guessInput.focus();
+    }
+
+    guessBtn.addEventListener('click', submitGuess);
+    guessInput.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); submitGuess(); }});
+
+    // Modal events
+    const overlay = document.getElementById('solvedOverlay');
+    const closeBtn = document.getElementById('closeSolvedBtn');
+    const shareBtn = document.getElementById('shareBtn');
+
+    if(closeBtn){
+      closeBtn.addEventListener('click', ()=>{ overlay.classList.remove('is-open'); });
+    }
+    if(overlay){
+      overlay.addEventListener('click', e=>{
+        if(e.target === overlay){
+          overlay.classList.remove('is-open');
+        }
+      });
+    }
+    if(shareBtn){
+      shareBtn.addEventListener('click', async ()=>{
+        if(!TARGET) return;
+        const dxName = title(TARGET.diagnosis);
+        const text = `Guess the Diagnosis: I solved today's case (${dxName}) in ${guessesToday} attempts!`;
+        try{
+          if(navigator.share){
+            await navigator.share({ text });
+          }else if(navigator.clipboard){
+            await navigator.clipboard.writeText(text);
+            shareBtn.textContent = 'Copied!';
+            setTimeout(()=>{ shareBtn.textContent = 'Share'; }, 1500);
+          }else{
+            showStatus('Sharing not supported in this browser.');
+          }
+        }catch(e){
+          // user cancelled share; ignore
+        }
+      });
+    }
+
+    // ---------- Init ----------
+    const rows = parseCSV(CSV_30);
+    loadDataset(rows);
+    startDailyGame();
+  })();
+  </script>
+</body>
+</html>
