@@ -33,7 +33,7 @@
     input[type="text"]{
       width:100%;
       background:#ffffff;
-      color:var(--ink);
+      color:#0b1220;
       border:1px solid #dce1eb;
       border-radius:10px;
       padding:10px 12px;
@@ -117,6 +117,46 @@
       transition:width .2s ease;
     }
 
+    /* Guess cards for mobile view */
+    .cards{
+      display:none;
+      margin-top:8px;
+    }
+    .guess-card{
+      border:1px solid var(--border);
+      border-radius:12px;
+      padding:10px 12px;
+      background:#ffffff;
+      box-shadow:0 4px 12px rgba(15,23,42,0.06);
+      margin-top:8px;
+    }
+    .guess-card-header{
+      font-weight:600;
+      margin-bottom:4px;
+    }
+    .guess-card-row{
+      display:flex;
+      gap:6px;
+      align-items:flex-start;
+      margin-bottom:4px;
+    }
+    .guess-card-label{
+      font-size:11px;
+      font-weight:600;
+      color:var(--muted);
+      min-width:90px;
+      flex:0 0 auto;
+    }
+    .guess-card-value{
+      flex:1 1 auto;
+    }
+
+    /* Show cards instead of table on narrow screens */
+    @media (max-width: 768px){
+      .colwrap{ display:none; }
+      .cards{ display:block; }
+    }
+
     /* Solved modal */
     .overlay{
       position:fixed;
@@ -187,6 +227,7 @@
         <span><span class="swatch r"></span>Red = different</span>
       </div>
 
+      <!-- Desktop: table view -->
       <div class="colwrap">
         <table id="table">
           <thead>
@@ -204,6 +245,9 @@
           <tbody></tbody>
         </table>
       </div>
+
+      <!-- Mobile: card view -->
+      <div id="cardsContainer" class="cards"></div>
     </div>
 
     <p class="small muted" style="margin-top:10px">Educational use only. Not medical advice.</p>
@@ -358,7 +402,6 @@ Anemia (Iron Deficiency),,hematology,young adult,menorrhagia; low iron intake; c
     };
     const AGE_INDEX = new Map(AGE_ORDER.map((v,i)=>[v,i]));
 
-    // Pretty labels for age for display only
     const AGE_DISPLAY = {
       'infant': 'infant (0–1y)',
       'toddler': 'toddler (1–3y)',
@@ -370,7 +413,6 @@ Anemia (Iron Deficiency),,hematology,young adult,menorrhagia; low iron intake; c
       'neonate (0-28d)': 'neonate (0–28d)'
     };
 
-    // Weighted scoring
     const WEIGHTS = {
       system: 1.5,
       age: 1.2,
@@ -392,8 +434,6 @@ Anemia (Iron Deficiency),,hematology,young adult,menorrhagia; low iron intake; c
     let bestScoreSoFar=0;
     let guessesToday=0;
     let solvedToday=false;
-
-    // ---------- Utility / parsing ----------
 
     function normalizeToken(s){ return (s||'').toString().trim().toLowerCase(); }
 
@@ -586,8 +626,6 @@ Anemia (Iron Deficiency),,hematology,young adult,menorrhagia; low iron intake; c
       return (str||'').replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]));
     }
 
-    // ---------- Game state helpers ----------
-
     function showStatus(msg){
       const el = document.getElementById('statusMsg');
       if(el) el.textContent = msg || '';
@@ -635,6 +673,8 @@ Anemia (Iron Deficiency),,hematology,young adult,menorrhagia; low iron intake; c
       GUESSED = new Set();
       const tbody = document.querySelector('#table tbody');
       if(tbody) tbody.innerHTML='';
+      const cards = document.getElementById('cardsContainer');
+      if(cards) cards.innerHTML='';
       const guessInput = document.getElementById('guess');
       const guessBtn = document.getElementById('guessBtn');
       if(guessInput) guessInput.value='';
@@ -665,8 +705,6 @@ Anemia (Iron Deficiency),,hematology,young adult,menorrhagia; low iron intake; c
       return num / TOTAL_WEIGHT;
     }
 
-    // ---------- Rendering guesses ----------
-
     function renderRow(guess){
       const t=TARGET;
       const scoreSystem = systemSimilarity(guess.system, t.system);
@@ -685,6 +723,7 @@ Anemia (Iron Deficiency),,hematology,young adult,menorrhagia; low iron intake; c
         updateProgress(bestScoreSoFar);
       }
 
+      // Table row (desktop)
       const tr=document.createElement('tr');
       tr.innerHTML = `
         <td><strong>${escapeHtml(title(guess.diagnosis))}</strong></td>
@@ -696,6 +735,44 @@ Anemia (Iron Deficiency),,hematology,young adult,menorrhagia; low iron intake; c
         <td>${renderTokenChips('management', guess.management, t.management)}</td>
         <td>${renderTokenChips('course', [guess.course].filter(Boolean), [t.course].filter(Boolean))}</td>`;
       document.querySelector('#table tbody').appendChild(tr);
+
+      // Card view (mobile)
+      const cards = document.getElementById('cardsContainer');
+      if(cards){
+        const card = document.createElement('div');
+        card.className = 'guess-card';
+        card.innerHTML = `
+          <div class="guess-card-header">${escapeHtml(title(guess.diagnosis))}</div>
+          <div class="guess-card-row">
+            <div class="guess-card-label">System</div>
+            <div class="guess-card-value">${renderTokenChips('system', [guess.system].filter(Boolean), [t.system].filter(Boolean))}</div>
+          </div>
+          <div class="guess-card-row">
+            <div class="guess-card-label">Age group</div>
+            <div class="guess-card-value">${renderTokenChips('age', guess.age, t.age)}</div>
+          </div>
+          <div class="guess-card-row">
+            <div class="guess-card-label">Epidemiology</div>
+            <div class="guess-card-value">${renderTokenChips('epidemiology', guess.epidemiology, t.epidemiology)}</div>
+          </div>
+          <div class="guess-card-row">
+            <div class="guess-card-label">Etiology</div>
+            <div class="guess-card-value">${renderTokenChips('etiology', guess.etiology, t.etiology)}</div>
+          </div>
+          <div class="guess-card-row">
+            <div class="guess-card-label">Findings</div>
+            <div class="guess-card-value">${renderTokenChips('findings', guess.findings, t.findings)}</div>
+          </div>
+          <div class="guess-card-row">
+            <div class="guess-card-label">Management</div>
+            <div class="guess-card-value">${renderTokenChips('management', guess.management, t.management)}</div>
+          </div>
+          <div class="guess-card-row">
+            <div class="guess-card-label">Course</div>
+            <div class="guess-card-value">${renderTokenChips('course', [guess.course].filter(Boolean), [t.course].filter(Boolean))}</div>
+          </div>`;
+        cards.appendChild(card);
+      }
 
       const solved = scoresArr.every(s=>s>=0.8);
       if(solved){
@@ -728,8 +805,6 @@ Anemia (Iron Deficiency),,hematology,young adult,menorrhagia; low iron intake; c
         overlay.classList.add('is-open');
       }
     }
-
-    // ---------- Guess submission ----------
 
     function addGuess(input){
       if(!TARGET){
@@ -771,7 +846,6 @@ Anemia (Iron Deficiency),,hematology,young adult,menorrhagia; low iron intake; c
     guessBtn.addEventListener('click', submitGuess);
     guessInput.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); submitGuess(); }});
 
-    // Modal events
     const overlay = document.getElementById('solvedOverlay');
     const closeBtn = document.getElementById('closeSolvedBtn');
     const shareBtn = document.getElementById('shareBtn');
@@ -807,7 +881,6 @@ Anemia (Iron Deficiency),,hematology,young adult,menorrhagia; low iron intake; c
       });
     }
 
-    // ---------- Init ----------
     const rows = parseCSV(CSV_30);
     loadDataset(rows);
     startDailyGame();
