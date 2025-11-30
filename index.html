@@ -33,7 +33,7 @@
 
     input[type="text"]{
       width:100%;
-      max-width:320px;       /* shorten the diagnosis box */
+      max-width:320px;
       background:#ffffff;
       color:#0b1220;
       border:1px solid #dce1eb;
@@ -86,7 +86,7 @@
       color:var(--muted);
       font-size:13px;
       flex-wrap:wrap;
-      margin-top:8px;
+      margin-top:10px;
     }
     .swatch{
       width:14px;
@@ -103,8 +103,10 @@
     .small{font-size:12px}
     .colwrap{overflow:auto; margin-top:8px;}
 
+    /* (2) Progress bar: fatter + better spacing */
     .progress-bar{
-      margin-top:8px;
+      margin-top:12px;
+      margin-bottom:8px;
       width:100%;
       max-width:100%;
       height:14px;
@@ -146,6 +148,12 @@
       background:#ffffff;
       box-shadow:0 4px 12px rgba(15,23,42,0.06);
       margin-top:8px;
+      transition:border-color .15s ease, background-color .15s ease;
+    }
+    /* (4) highlight latest guess */
+    .guess-card.latest-card{
+      background:#f7f9ff;
+      border-color:#cbd5ff;
     }
     .guess-card-header{
       font-weight:600;
@@ -168,7 +176,7 @@
       flex:1 1 auto;
     }
 
-    /* Show cards instead of table on narrow screens */
+    /* Show cards instead of table on narrow screens (no extra tightening) */
     @media (max-width: 768px){
       .colwrap{ display:none; }
       .cards{ display:block; }
@@ -762,7 +770,7 @@ Anemia (Iron Deficiency),,hematology,young adult,menorrhagia; low iron intake; c
       const cards = document.getElementById('cardsContainer');
       if(cards){
         const card = document.createElement('div');
-        card.className = 'guess-card';
+        card.className = 'guess-card latest-card';
         card.innerHTML = `
           <div class="guess-card-header">${escapeHtml(title(guess.diagnosis))}</div>
           <div class="guess-card-row">
@@ -794,6 +802,7 @@ Anemia (Iron Deficiency),,hematology,young adult,menorrhagia; low iron intake; c
             <div class="guess-card-value">${renderTokenChips('course', [guess.course].filter(Boolean), [t.course].filter(Boolean))}</div>
           </div>`;
         if(cards.firstChild){
+          cards.firstChild.classList.remove('latest-card');
           cards.insertBefore(card, cards.firstChild);
         }else{
           cards.appendChild(card);
@@ -805,11 +814,6 @@ Anemia (Iron Deficiency),,hematology,young adult,menorrhagia; low iron intake; c
         handleSolved();
       }
     }
-
-    function systemSimilarity(a,b){ if(!a&&!b) return 1; if(!a||!b) return 0; if(a===b) return 1; return relScore('system',a,b); }
-    function etiologySimilarity(aSet,bSet){ return Math.max(jaccard(aSet,bSet), setRelatedness('etiology',aSet,bSet)); }
-    function managementSimilarity(aSet,bSet){ return Math.max(jaccard(aSet,bSet), setRelatedness('management',aSet,bSet)); }
-    function courseSimilarity(a,b){ if(!a&&!b) return 1; if(!a||!b) return 0; if(a===b) return 1; return relScore('course',a,b); }
 
     function handleSolved(){
       solvedToday = true;
