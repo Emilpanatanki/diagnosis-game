@@ -32,6 +32,7 @@
 
     input[type="text"]{
       width:100%;
+      max-width:320px;       /* shorten the diagnosis box */
       background:#ffffff;
       color:#0b1220;
       border:1px solid #dce1eb;
@@ -104,7 +105,7 @@
       margin-top:8px;
       width:100%;
       max-width:100%;
-      height:14px;           /* thicker bar */
+      height:14px;
       border-radius:999px;
       background:#e5eaf3;
       overflow:hidden;
@@ -115,6 +116,20 @@
       border-radius:999px;
       background:var(--accent);
       transition:width .2s ease;
+    }
+
+    /* Status banner */
+    #statusMsg{
+      margin-top:8px;
+      padding:6px 10px;
+      border-radius:10px;
+      background:#eef2ff;
+      color:#111827;
+      font-size:12px;
+      display:none;
+    }
+    #statusMsg.status-visible{
+      display:block;
     }
 
     /* Guess cards for mobile view */
@@ -202,19 +217,18 @@
     </div>
 
     <div class="card" style="margin-top:16px">
-      <!-- Input row (no label, full-width) -->
-      <div class="row">
-        <div>
+      <!-- Input + Add button on the same row -->
+      <div class="row" style="align-items:flex-end;">
+        <div style="flex:1 1 auto;">
           <input id="guess" list="diagnosisList" type="text" placeholder="Start typing a diagnosis…" />
           <datalist id="diagnosisList"></datalist>
         </div>
-      </div>
-      <!-- Add button on its own row, right-aligned -->
-      <div style="margin-top:8px; display:flex; justify-content:flex-end;">
-        <button id="guessBtn">Add</button>
+        <div style="flex:0 0 auto;">
+          <button id="guessBtn">Add</button>
+        </div>
       </div>
 
-      <div id="statusMsg" class="small muted" style="margin-top:8px"></div>
+      <div id="statusMsg" class="small muted"></div>
 
       <div class="progress-bar" role="progressbar" aria-label="Best similarity so far" aria-valuemin="0" aria-valuemax="100">
         <div id="progressInner" class="progress-inner" aria-valuenow="0"></div>
@@ -268,7 +282,7 @@
   (function(){
     const CSV_30 = `Diagnosis,Aliases,System,AgeGroup,Epidemiology,Etiology,Onset,KeyFindings,Investigation,Management,SeverityRisk
 Myocardial Infarction,Heart attack; MI,cardiovascular,older adult (65+),male; smoker; atherosclerosis; DM,vascular; thrombotic,acute,chest pain; dyspnea; diaphoresis,ecg; troponin,antiplatelets; anticoagulation; reperfusion,high
-Pneumonia,Lower respiratory tract infection,respiratory,older adult (65+),winter; aspiration; comorbidity,infection,acute,fever; cough; dyspnea; sputum,cxr,antibiotics; supportive,moderate
+Pneumonia,Lower respiratory tract infection,respiratory,older adult (65+),winter; aspiration; nursing home,infection,acute,fever; cough; dyspnea; sputum,cxr,antibiotics; supportive,moderate
 Asthma,Bronchial asthma,respiratory,child,atopy; FHx,inflammatory,acute; recurrent; episodic,wheeze; cough; dyspnea,spirometry,bronchodilators; inhaled steroids,low
 Stroke,Cerebrovascular accident; CVA,neurology,older adult (65+),HTN; AF,vascular; thrombotic,acute,weakness focal; facial droop; confusion,ct; mri,reperfusion; antiplatelets; anticoagulation,high
 Appendicitis,,gastrointestinal,young adult,appendiceal obstruction,obstructive; infection,acute,RLQ pain; fever; nausea vomiting,clinical; ultrasound,appendectomy,moderate
@@ -319,7 +333,6 @@ Gout,,rheumatology,middle adult,M; hyperuricemia; alcohol,metabolic,acute; recur
 Systemic Lupus Erythematosus,SLE,rheumatology,young adult,F; autoimmune; multisystem,autoimmune,chronic,malar rash; arthralgia; fatigue,ANA; anti-dsDNA,immunosuppressants; steroids,mixed
 Anemia (Iron Deficiency),,hematology,young adult,menorrhagia; low iron intake; chronic blood loss,deficiency,chronic,fatigue; pallor; dyspnea on exertion,CBC; ferritin,oral iron; treat cause,low`;
 
-    // Abstract strict vignettes
     const VIGNETTES = {
       'myocardial infarction': 'A 60 year old male presents with chest pain.',
       'pneumonia': 'A 72 year old female presents with fever and cough.',
@@ -628,7 +641,14 @@ Anemia (Iron Deficiency),,hematology,young adult,menorrhagia; low iron intake; c
 
     function showStatus(msg){
       const el = document.getElementById('statusMsg');
-      if(el) el.textContent = msg || '';
+      if(!el) return;
+      if(msg){
+        el.textContent = msg;
+        el.classList.add('status-visible');
+      }else{
+        el.textContent = '';
+        el.classList.remove('status-visible');
+      }
     }
 
     function updateProgress(score){
@@ -736,7 +756,7 @@ Anemia (Iron Deficiency),,hematology,young adult,menorrhagia; low iron intake; c
         <td>${renderTokenChips('course', [guess.course].filter(Boolean), [t.course].filter(Boolean))}</td>`;
       document.querySelector('#table tbody').appendChild(tr);
 
-      // Card view (mobile)
+      // Card view (mobile) – prepend so last guess is shown first
       const cards = document.getElementById('cardsContainer');
       if(cards){
         const card = document.createElement('div');
@@ -771,7 +791,12 @@ Anemia (Iron Deficiency),,hematology,young adult,menorrhagia; low iron intake; c
             <div class="guess-card-label">Course</div>
             <div class="guess-card-value">${renderTokenChips('course', [guess.course].filter(Boolean), [t.course].filter(Boolean))}</div>
           </div>`;
-        cards.appendChild(card);
+        // Prepend (newest first)
+        if(cards.firstChild){
+          cards.insertBefore(card, cards.firstChild);
+        }else{
+          cards.appendChild(card);
+        }
       }
 
       const solved = scoresArr.every(s=>s>=0.8);
@@ -804,6 +829,7 @@ Anemia (Iron Deficiency),,hematology,young adult,menorrhagia; low iron intake; c
       if(overlay){
         overlay.classList.add('is-open');
       }
+      showStatus(''); // clear inline banner when solved
     }
 
     function addGuess(input){
@@ -831,6 +857,7 @@ Anemia (Iron Deficiency),,hematology,young adult,menorrhagia; low iron intake; c
       }
       GUESSED.add(canonical);
       guessesToday++;
+      showStatus('');
       renderRow(row);
     }
 
